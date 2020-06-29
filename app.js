@@ -1,11 +1,12 @@
 const express = require("express");
 
 
-const tourRoutes = require("./routes/tourRoutes");
-const userRoutes = require("./routes/userRoutes");
-const reviewRoutes = require('./routes/reviewRoutes');
-
 const app = express();
+
+const donorRoute = require('./routes/donorRoute');
+const patietRoute = require('./routes/patientRoute');
+const adminRoute = require('./routes/adminRoute');
+
 
 const globalErrorController = require("./controller/errorController");
 const morgan = require("morgan");
@@ -53,9 +54,10 @@ app.use(express.urlencoded({extended:true}))
 
 
 
-app.use('/api/tours',tourRoutes)
-app.use('/api/users',userRoutes);
-app.use('/api/reviews',reviewRoutes);
+app.use('/api/donor',donorRoute);
+app.use('/api/patient',patietRoute)
+// app.use('/api/admin',adminRoute)
+
 
 
 
@@ -70,10 +72,7 @@ app.all('*',(req , res , next)=>{
     next(err);
 })
 
-
-
 app.use(globalErrorController)
-
 
 exports.Server = app;
 

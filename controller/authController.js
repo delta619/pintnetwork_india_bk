@@ -12,18 +12,24 @@ const signToken = (id) => {
   });
 };
 
-const createAndSendToken = (user , statusCode , res)=>{
+const createAndSendToken = (user , statusCode , req, res)=>{
     const token = signToken(user._id);
 
     const cookieOptions = {
       expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN *24*60*60*1000),
-      httpOnly:true
+      httpOnly:true,
+      secure: req.secure || req.headers['x-forwarded-proto']==='https'
     };
 
     if(process.env.NODE_ENV === 'production') cookieOptions.secure= true;
     res.cookie('jwt',token, cookieOptions)
+
+
+
       user.password = undefined;
-    res.status(statusCode).json({
+    
+    
+      res.status(statusCode).json({
         status:"Success",
         token,
         data: {
@@ -43,13 +49,13 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 
 
-   createAndSendToken(newUser, 201, res);
+   createAndSendToken(newUser, 201, req, res);
      
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   
   if (!email || !password) {
     return next(new AppError('Email or password Missing', 400));
@@ -61,7 +67,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Email or Password is incorrect', 401));
   }
 
-   createAndSendToken(user, 200, res);
+   createAndSendToken(user, 200,req,  res);
 
 });
 
@@ -83,7 +89,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   //Check if user still exists
-  console.log(decoded);
+  // console.log(decoded);
 
   const currentUser = await User.findById(decoded.id);
 
@@ -96,7 +102,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // Check if password was changed after token was generated
 
   if (await currentUser.changedPasswordAfter(decoded.iat)) {
-    console.log('req.user is ',currentUser.changedPasswordAfter(decoded.iat));
+    // console.log('req.user is ',currentUser.changedPasswordAfter(decoded.iat));
 
     return next(new AppError('User has changed the password after jwt was generated', 401));
   }
@@ -183,11 +189,11 @@ exports.resetPassword = catchAsync( async(req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
-    console.log({user});
+    // console.log({user});
     
     await user.save();
     
-    createAndSendToken(user, 200, res);
+    createAndSendToken(user, 200, req, res);
 
 })
 
@@ -197,7 +203,7 @@ exports.updatePassword = catchAsync(async(req , res , next)=>{
 
 // 1 GET USER FROM COLLECTION
 
-console.log(req.body);
+// console.log(req.body);
 
     const user = await User.findById(req.user.id).select('+password');
 
@@ -217,7 +223,7 @@ console.log(req.body);
 
 // 4 Log the user in , send the JWT token
 
-    createAndSendToken(user, 200, res);
+    createAndSendToken(user, 200, req,  res);
 
 
 })
