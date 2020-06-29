@@ -52,7 +52,7 @@ app.use(hpp({
 
 app.use(express.urlencoded({extended:true}))
 
-
+app.use('/',express.static('public'));
 
 app.use('/api/donor',donorRoute);
 app.use('/api/patient',patietRoute)
