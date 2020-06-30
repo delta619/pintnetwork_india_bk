@@ -2,7 +2,7 @@ const express = require("express");
 
 
 const app = express();
-
+app.use(cors());
 const donorRoute = require('./routes/donorRoute');
 const patietRoute = require('./routes/patientRoute');
 const adminRoute = require('./routes/adminRoute');
@@ -52,7 +52,6 @@ app.use(hpp({
 
 app.use(express.urlencoded({extended:true}))
 
-app.use('/',express.static('public'));
 
 app.use('/api/donor',donorRoute);
 app.use('/api/patient',patietRoute)
