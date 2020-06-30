@@ -2,7 +2,6 @@ const express = require("express");
 
 
 const app = express();
-app.use(cors());
 const donorRoute = require('./routes/donorRoute');
 const patietRoute = require('./routes/patientRoute');
 const adminRoute = require('./routes/adminRoute');
@@ -15,7 +14,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const helmet = require('helmet');
 const hpp = require("hpp");
-
+const cors = require('cors');
 // GLOBAL
 
 app.use(morgan("dev"));
@@ -43,6 +42,9 @@ app.use(mongoSanitize());
 // prevent xss
 
 app.use(xss());
+
+// setting global cors
+app.use(cors());
 
 // prevent parameter pollution
 
