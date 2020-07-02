@@ -16,10 +16,10 @@ console.log("Options are ",options);
                VAR1:options.name
           }
      }).then((res)=>{
-          console.log("res is ",res);
+          // console.log("res is ",res);
           
      },(err)=>{
-          console.log("error is ",err);
+          // console.log("error is ",err);
           
      })
 
