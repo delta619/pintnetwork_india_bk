@@ -33,16 +33,14 @@ const patientSchema = new mongoose.Schema({
         type:Number,
     },
     connected:{
-        type:Number
+        type:Number,
+        default:0
     },
     registeredAt: {
         type: Date, 
-        default: Date.now
+        default: Date.now()
     },
     connectedTo: mongoose.Schema.Types.ObjectId  
-
-
-
 });
 
 

@@ -20,16 +20,10 @@ exports.match =  async (donor)=>{
         
     if(patients.length === 0){
         return ;
-    }
-
-    console.log("Patients found are ",patients.length);
-    
+    }    
 
     patients.sort((a, b) => (new Date(a.registeredAt).getTime() > new Date(b.registeredAt).getTime() ) ? 1 : -1)
 
-
-    patient = JSON.parse(JSON.stringify(patients[0]));
-    
 
     const [currentPatient,currentDonor] = await Promise.all([
       
@@ -43,7 +37,7 @@ exports.match =  async (donor)=>{
             {
                 connected:1 , 
                 connectedAt:Date.now(),
-                connectedTo: patient._id
+                connectedTo: patients[0]._id
             })
     ])
 

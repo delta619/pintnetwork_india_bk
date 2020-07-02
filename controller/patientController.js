@@ -19,8 +19,7 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
 
 exports.addPatient = catchAsync(async (req, res, next) => {
     const patient = await Patient.create(req.body);
-  
-
+      
 
       sms.sendWelcomeMessage({
         name:patient.name,
