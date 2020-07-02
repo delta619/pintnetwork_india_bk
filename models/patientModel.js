@@ -7,31 +7,39 @@ const patientSchema = new mongoose.Schema({
         type:String,
         trim:true
     },
+    age:{
+        type:Number,
+        trim:true
+    },
+    sex:{
+        type:String,
+    },
     contact:{
         type:String,
-        trim:true
     },
     email:{
         type:String,
     },
-    age:{
-        type:Number,
-    },
-    gender:{
-        type:String,
-    },
-    location:{
-        type:String,
-    },
-    hospital:{
-        type: String,
-    },
     blood:{
         type:String,
     },
-    caseSheetPresent:{
-        type:Boolean,
-    }
+    city:{
+        type: String,
+    },
+    hospital:{
+        type:String,
+    },
+    doctorPrescription:{
+        type:Number,
+    },
+    connected:{
+        type:Number
+    },
+    registeredAt: {
+        type: Date, 
+        default: Date.now
+    },
+
 
 });
 

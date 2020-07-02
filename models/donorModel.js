@@ -4,70 +4,83 @@ const mongoose = require("mongoose");
 const donorSchema = new mongoose.Schema({
     name:{
         type:String,
-        // unique:true,
-        trim:true,
-    },
-    contact:{
-        type:String,
-        trim:true,
-    },
-    email:{
-        type:String,
         trim:true,
     },
     age:{
         type:Number,
-        trim:true
+        trim:true,
     },
-    gender:{
+    sex:{
         type:String,
-        trim:true
+        trim:true,
     },
     location:{
         type:String,
+        trim:true
+    },
+    contact:{
+        type:String,
+        trim:true
+    },
+    email:{
+        type:String,
+
+    },
+    weight:{
+        type:Number,
 
     },
     blood:{
         type:String,
 
     },
-    diabities:{
-        type:Boolean,
-
+    city:{
+        type:String
     },
-    alcoholic:{
-        type:Boolean
+    pregnant:{
+        type:Number
     },
-    livesDisease:{
-        type:Boolean
+    tattoo:{
+        type:Number
     },
-    kidneyDisease:{
-        type:Boolean
+    bp:{
+        type:Number
     },
-    lungDisease:{
-        type:Boolean
+    anemia:{
+        type:Number
     },
-    highBloodPressure:{
-        type:Boolean
+    hiv:{
+        type:Number
     },
-    aadhaarAvailable:{
-        type:Boolean
+    mosquito:{
+        type:Number
     },
-    dateOfRecovery:{
+    cancer:{
+        type:Number
+    },
+    flu:{
+        type:Number
+    },
+    labTestConfirm:{
+        type:Number
+    },
+    days14over:{
+        type:Number
+    },
+    last_symptom_discharge_date:{
         type:Date
     },
-    dischargeReportAvailable:{
-        type:Boolean
+    dischargeReport:{
+        type:Number
     },
-    lastCovidNegTwoWeeks:{
-        type:Boolean
-    }
-
-    
-    
-
-   
+    aadhaar:{
+        type:Number
+    },
+    connected:{
+        type:Number
+    }   
 });
+
 
 
 const Donor = mongoose.model('donor',donorSchema);

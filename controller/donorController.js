@@ -2,6 +2,10 @@ const Donor = require("../models/donorModel");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/AppError");
+const sendEmail = require('./../utils/email');
+const Patient = require("../models/patientModel");
+const connectPeople = require('../utils/connectPeople');
+
 
 // const factory = require("./handlerFactory");
 
@@ -17,12 +21,24 @@ exports.getAllDonors = catchAsync(async (req, res, next) => {
 
 
 exports.addDonor = catchAsync(async (req, res, next) => {
-    const donors = await Donor.create(req.body);
+   
+  
+  const donor = await Donor.create(req.body);
+    
+    // await sendEmail({
+    //   email: donor.email,
+    //   subject: 'PINTNETWORK',
+    //   message: "Welcome to pintnetwork.com. Thanks for your contribution to humanity."
+    // });
+
+
+    connectPeople.match(donor);
+
   
     res.status(200).json({
       status: 'Success',
-      results: donors.length,
-      data: donors,
+      results: donor.length,
+      data: donor,
     });
   });
 

@@ -2,6 +2,7 @@ const Patient = require("../models/patientModel");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/AppError");
+const sendEmail = require('./../utils/email');
 
 // const factory = require("./handlerFactory");
 
@@ -17,12 +18,19 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
 
 
 exports.addPatient = catchAsync(async (req, res, next) => {
-    const patients = await Patient.create(req.body);
+    const patient = await Patient.create(req.body);
   
+
+    // await sendEmail({
+    //   email: patient.email,
+    //   subject: 'PINTNETWORK',
+    //   message: "Welcome to pintnetwork.com. We will try our best to help you as soon as possible."
+    // });
+
     res.status(200).json({
       status: 'Success',
-      results: patients.length,
-      data: patients,
+      results: patient.length,
+      data: patient,
     });
   });
 

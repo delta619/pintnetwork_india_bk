@@ -67,8 +67,9 @@ app.all('*',(req , res , next)=>{
     //     status:"failed",
     //     message:`Couldnt find ${req.originalUrl} `
     // })
-
-    const err = new Error(`Couldnt find ${req.originalUrl}`)
+    console.log("unhandled route was traced");
+    
+    const err = new App(`Couldnt find ${req.originalUrl}`)
     err.statusCode = 404;
     next(err);
 })
