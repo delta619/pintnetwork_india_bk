@@ -5,6 +5,7 @@ const sendEmail = async options =>{
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,
+        // secure: false,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD
@@ -14,13 +15,18 @@ const sendEmail = async options =>{
     // 2 define the email option
 
     const mailOptions = {
-        from: 'Ashutosh Malla <ashu@ashu.com>',
+        from: 'Pint Network <admin@pintnetwork.com>',
         to: options.email,
         subject: options.subject,
-        text: options.message
+        text: options.message,
+        envelope: {
+          from: 'Pint Network <admin@pintnetwork.com>', // used as MAIL FROM: address for SMTP
+          to: options.email // used as RCPT TO: address for SMTP
+      }
     }
 
     // 3 Actually send the email
+    
 
   await transporter.sendMail(mailOptions);
 }

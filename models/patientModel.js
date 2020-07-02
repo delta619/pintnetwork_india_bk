@@ -39,6 +39,8 @@ const patientSchema = new mongoose.Schema({
         type: Date, 
         default: Date.now
     },
+    connectedTo: mongoose.Schema.Types.ObjectId  
+
 
 
 });

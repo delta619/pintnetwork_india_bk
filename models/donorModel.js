@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { schema } = require("./patientModel");
 
 
 const donorSchema = new mongoose.Schema({
@@ -78,7 +79,8 @@ const donorSchema = new mongoose.Schema({
     },
     connected:{
         type:Number
-    }   
+    },
+    connectedTo: mongoose.Schema.Types.ObjectId  
 });
 
 

@@ -5,6 +5,7 @@ const AppError = require("../utils/AppError");
 const sendEmail = require('./../utils/email');
 const Patient = require("../models/patientModel");
 const connectPeople = require('../utils/connectPeople');
+const sms = require('../utils/smsService');
 
 
 // const factory = require("./handlerFactory");
@@ -25,11 +26,17 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   
   const donor = await Donor.create(req.body);
     
-    // await sendEmail({
-    //   email: donor.email,
-    //   subject: 'PINTNETWORK',
-    //   message: "Welcome to pintnetwork.com. Thanks for your contribution to humanity."
-    // });
+
+  sms.sendWelcomeMessage({
+    name:donor.name,
+    contact:donor.contact
+  })
+
+  sendEmail({
+    email: donor.email,
+    subject: 'PINTNETWORK',
+    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community.`
+  });
 
 
     connectPeople.match(donor);
