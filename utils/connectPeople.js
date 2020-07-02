@@ -55,7 +55,7 @@ exports.match =  async (donor)=>{
             Name: ${currentPatient.name}\n
             Phone no.: ${currentPatient.contact}\n
             Email: ${currentPatient.email?currentPatient.email:"Email not provided"}\n
-            Hospital: ${currentPatient.hosppital}\n
+            Hospital: ${currentPatient.hospital}\n
             We’ve attached below a copy of your medical history to ease the process of donation.\n
             Thank you for believing in us and for your relentless service to humanity.\n
             You are one step closer to saving a life.\n
