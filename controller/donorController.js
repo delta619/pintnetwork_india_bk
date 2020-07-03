@@ -88,7 +88,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
       message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
     })
     
-   fs.unlinkSync(donor_email_attachment)
+  //  fs.unlinkSync(donor_email_attachment)
 
   initiateMatch();
 
