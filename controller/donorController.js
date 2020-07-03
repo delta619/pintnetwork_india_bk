@@ -4,9 +4,10 @@ const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/AppError");
 const sendEmail = require('./../utils/email');
 const Patient = require("../models/patientModel");
-const connectPeople = require('../utils/connectPeople');
+const connectPeople = require('../utils/matchPeople');
 const sms = require('../utils/smsService');
 
+const initiateMatch = require('../MatchAlgorithm/main');
 
 // const factory = require("./handlerFactory");
 
@@ -23,37 +24,52 @@ exports.getAllDonors = catchAsync(async (req, res, next) => {
 
 exports.addDonor = catchAsync(async (req, res, next) => {
    
+
+  let donor = req.body;
+
+  // donor preprocessing
+  if(donor.hiv == -1)donor.hiv=0;
+  if(donor.mosquito == -1)donor.mosquito=0;
+
+
+
+
+  let healthy = ((donor.hiv == 0) && (donor.mosquito == 0) && (donor.days14over == 1) && (donor.pregnant == 0) )
+
+
+  console.log("the donor is",healthy?"Healthy ":"Not Healthy");
+
   
-  const donor = await Donor.create(req.body);
+  const uploaded_donor = await Donor.create(donor);
     
 
-  sms.sendWelcomeMessage({
-    name:donor.name,
-    contact:donor.contact
-  })
+  // sms.sendWelcomeMessage({
+  //   name:donor.name,
+  //   contact:donor.contact
+  // })
 
-  let isAllowed = ((donor.hiv != 1) && (donor.mosquito != 1) && (donor.days14over == 1) && (donor.pregnant !=1) )
-
-  let notAllowedMsg =`\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
-
+  let notHealthyMsg =`\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
 
 
   sendEmail({
     email: donor.email,
     subject: 'PINTNETWORK',
-    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${~isAllowed?notAllowedMsg:''}`
+    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
+  }).catch(err=>{
+    console.log("Error sending Welcome mail to Donor",err);
+    
   });
 
 
-  if(isAllowed){
-    connectPeople.match(donor);
-  }
+  initiateMatch();
+
+
 
   
     res.status(200).json({
       status: 'Success',
       results: donor.length,
-      data: donor,
+      data: uploaded_donor,
     });
   });
 

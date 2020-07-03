@@ -77,10 +77,17 @@ const donorSchema = new mongoose.Schema({
     aadhaar:{
         type:Number
     },
-    connected:{
-        type:Number
+    matchedEarlier:{
+        type:Boolean,
+        default:false
     },
-    connectedTo: mongoose.Schema.Types.ObjectId  
+    matchedTo:{
+        type: mongoose.Schema.Types.ObjectId
+    },
+    healthy: {
+        type:Boolean,
+        default:true
+    },
 });
 
 

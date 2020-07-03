@@ -28,19 +28,27 @@ const patientSchema = new mongoose.Schema({
     },
     hospital:{
         type:String,
+        default: "Not mentioned"
     },
     doctorPrescription:{
         type:Number,
     },
-    connected:{
-        type:Number,
-        default:0
-    },
+    
     registeredAt: {
         type: Date, 
         default: Date.now()
     },
-    connectedTo: mongoose.Schema.Types.ObjectId  
+    healthy:{
+        type:Boolean,
+        default: false
+    },
+    matchedEarlier:{
+        type:Boolean,
+        default:false
+    },
+    matchedTo: {
+        type: mongoose.Schema.Types.ObjectId  
+    }
 });
 
 

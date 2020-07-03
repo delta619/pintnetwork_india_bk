@@ -4,7 +4,9 @@ const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/AppError");
 const sendEmail = require('./../utils/email');
 const sms = require('../utils/smsService');
-// const factory = require("./handlerFactory");
+
+const initiateMatch = require('../MatchAlgorithm/main');
+
 
 exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
@@ -21,16 +23,29 @@ exports.addPatient = catchAsync(async (req, res, next) => {
     const patient = await Patient.create(req.body);
       
 
-      sms.sendWelcomeMessage({
-        name:patient.name,
-        contact:patient.contact
-      })
+      // sms.sendWelcomeMessage({
+      //   name:patient.name,
+      //   contact:patient.contact
+      // })
+      
 
      sendEmail({
       email: patient.email,
       subject: 'PINTNETWORK',
       message: `Hi ${patient.name}\nWelcome aboard to Pintnetwork.com community.`
+    }).catch(err=>{
+      console.log("Error sending Welcome mail to Patient",err);
+      
     });
+
+
+    // Initiate Match
+
+
+    initiateMatch();
+
+
+
 
     res.status(200).json({
       status: 'Success',
