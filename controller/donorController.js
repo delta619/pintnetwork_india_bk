@@ -81,12 +81,21 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
     let donor_email_attachment = path.join(__dirname, ".." , "userdata" , "emails", `${donor.contact}.pdf`)
 
-    await sendEmail({
-      email: donor.email,
-      subject: 'Welcome to PintNetwork',
-      attachment : `${donor_email_attachment}`,
-      message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
-    })
+    try{
+
+      await sendEmail({
+        email: donor.email,
+        subject: 'Welcome to PintNetwork',
+        attachment : `${donor_email_attachment}`,
+        message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
+      })
+
+    }catch(err){
+      console.log("Email with attachment is the error",err);
+      
+    }
+
+
     
   //  fs.unlinkSync(donor_email_attachment)
 

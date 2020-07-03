@@ -46,7 +46,7 @@ exports.renderDonorEmail = async(donor)=>{
     }
   }
 
-    console.log("insode pdf creation");
+    console.log("inside pdf creation");
 
     let list_char = "• "
     const doc = new PDFDocument();
