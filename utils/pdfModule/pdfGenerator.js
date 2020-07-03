@@ -49,12 +49,14 @@ exports.renderDonorEmail = async(donor)=>{
     console.log("insode pdf creation");
 
     let list_char = "• "
-
     const doc = new PDFDocument();
 
-    let donorBio = path.join(__dirname, ".." , ".." , "userdata" , "emails" , `${donor.contact}.pdf`)
-    doc.pipe(fs.createWriteStream(donorBio));
+    try {
+      let donorBio = path.join(__dirname, ".." , ".." , "userdata" , "emails" , `${donor.contact}.pdf`)
+      doc.pipe(fs.createWriteStream(donorBio));
+
     
+
     doc
       .font(__dirname+'/fonts/roboto.ttf')
       .fontSize(14)
@@ -83,7 +85,9 @@ exports.renderDonorEmail = async(donor)=>{
 
        
     doc.end();
-
+  } catch (error) {
+    console.log("error while rendering pdf");      
+  }
 
 }
 
