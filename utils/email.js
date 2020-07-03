@@ -20,10 +20,10 @@ const sendEmail = async options =>{
         subject: options.subject,
         text: options.message,
 
-        // attachments:[{
-        //   filename:"DonorForm.pdf",
-        //   path:options.attachment,
-        // }],
+        attachments:[{
+          filename:"DonorForm.pdf",
+          path:options.attachment,
+        }],
 
         envelope: {
           from: 'Pint Network <admin@pintnetwork.com>', // used as MAIL FROM: address for SMTP
