@@ -71,7 +71,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
   
   try{
-    pdf.renderDonorEmail(form_details)
+    await pdf.renderDonorEmail(form_details)
     console.log("PDF generated of donor ");
     
   }catch(err){
