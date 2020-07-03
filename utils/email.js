@@ -19,6 +19,12 @@ const sendEmail = async options =>{
         to: options.email,
         subject: options.subject,
         text: options.message,
+
+        attachments:[{
+          filename:"DonorForm.pdf",
+          path:options.attachment,
+        }],
+
         envelope: {
           from: 'Pint Network <admin@pintnetwork.com>', // used as MAIL FROM: address for SMTP
           to: options.email // used as RCPT TO: address for SMTP

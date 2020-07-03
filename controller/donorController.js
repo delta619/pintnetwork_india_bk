@@ -6,10 +6,12 @@ const sendEmail = require('./../utils/email');
 const Patient = require("../models/patientModel");
 const connectPeople = require('../utils/matchPeople');
 const sms = require('../utils/smsService');
+const fs = require('fs');
 
 const pdf = require('../utils/pdfModule/pdfGenerator')
 
 const initiateMatch = require('../MatchAlgorithm/main');
+const bodyParser = require("body-parser");
 
 // const factory = require("./handlerFactory");
 
@@ -29,9 +31,15 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
   let donor = req.body;
 
+
+  // copying for the pdf
+  let form_details = JSON.parse(JSON.stringify(donor));
+
   // donor preprocessing
   if(donor.hiv == -1)donor.hiv=0;
   if(donor.mosquito == -1)donor.mosquito=0;
+  if(donor.bp == -1)donor.dp=0;
+  if(donor.cancer == -1)donor.cancer=0;
 
 
 
@@ -45,46 +53,35 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   const uploaded_donor = await Donor.create(donor);
     
 
-  // sms.sendWelcomeMessage({
-  //   name:donor.name,
-  //   contact:donor.contact
-  // })
+  sms.sendWelcomeMessage({
+    name:donor.name,
+    contact:donor.contact
+  })
+
 
   let notHealthyMsg =`\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
 
-
-
   
-  // try{
-  //    pdf.renderDonorEmail(donor)
-  //   console.log("PDF generated of donor ");
+  try{
+    pdf.renderDonorEmail(form_details)
+    console.log("PDF generated of donor ");
     
-  // }catch(err){
-  //   console.log("Error generating pdf .",err);
+  }catch(err){
+    console.log("Error generating pdf .",err);
     
-  // }
-  // console.log("Came out of generation");
-  
+  }
 
-
-
-
-
-  sendEmail({
-    email: donor.email,
-    subject: 'Welcome to PintNetwork',
-    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
-  }).catch(err=>{
-    console.log("Error sending Welcome mail to Donor",err);
+    await sendEmail({
+      email: donor.email,
+      subject: 'Welcome to PintNetwork',
+      attachment : `./userdata/sandbox_emails/${donor.contact}.pdf`,
+      message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
+    })
     
-  });
-
+   fs.unlinkSync(`./userdata/sandbox_emails/${donor.contact}.pdf`)
 
   initiateMatch();
 
-
-
-  
     res.status(200).json({
       status: 'Success',
       results: donor.length,
