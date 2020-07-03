@@ -5,7 +5,7 @@ const Patient = require("../models/patientModel");
 
 
 const catchAsync = require("../utils/catchAsync");
-const sendEmail = require('./../utils/email');
+const email = require('./../utils/email');
 
 const sms = require('../utils/smsService');
 const pdf = require('../utils/pdfModule/pdfGenerator')
@@ -83,10 +83,10 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
     try{
 
-      await sendEmail({
+      await email.sendDonorAttachment({
         email: donor.email,
         subject: 'Welcome to PintNetwork',
-        attachment : `${donor_email_attachment}`,
+        donor,
         message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
       })
 
@@ -97,7 +97,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
 
     
-  //  fs.unlinkSync(donor_email_attachment)
+  fs.unlinkSync(donor_email_attachment)
 
   initiateMatch();
 
