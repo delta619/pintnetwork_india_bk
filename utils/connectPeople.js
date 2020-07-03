@@ -20,10 +20,16 @@ exports.match =  async (donor)=>{
         
     if(patients.length === 0){
         return ;
-    }    
+    }
+
+    console.log("Patients found are ",patients.length);
+    
 
     patients.sort((a, b) => (new Date(a.registeredAt).getTime() > new Date(b.registeredAt).getTime() ) ? 1 : -1)
 
+
+    
+    
 
     const [currentPatient,currentDonor] = await Promise.all([
       
@@ -55,7 +61,7 @@ exports.match =  async (donor)=>{
             Name: ${currentPatient.name}\n
             Phone no.: ${currentPatient.contact}\n
             Email: ${currentPatient.email?currentPatient.email:"Email not provided"}\n
-            Hospital: ${currentPatient.hospital}\n
+            Hospital: ${currentPatient.hosppital}\n
             We’ve attached below a copy of your medical history to ease the process of donation.\n
             Thank you for believing in us and for your relentless service to humanity.\n
             You are one step closer to saving a life.\n

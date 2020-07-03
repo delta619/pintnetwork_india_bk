@@ -32,14 +32,22 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     contact:donor.contact
   })
 
+  let isAllowed = ((donor.hiv != 1) || (donor.mosquito != 1) || (donor.days14over == 1) || (donor.pregnant != 1) )
+
+  let notAllowedMsg =`<br>Unfortunately you did not meet the criteria for plasma donation.<br> Feel free to reach out to us for any further queries.`
+
+
+
   sendEmail({
     email: donor.email,
     subject: 'PINTNETWORK',
-    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community.`
+    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!isAllowed?notAllowedMsg:''}`
   });
 
 
+  if(isAllowed){
     connectPeople.match(donor);
+  }
 
   
     res.status(200).json({
