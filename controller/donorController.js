@@ -34,7 +34,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
   let isNotAllowed = ((donor.hiv == 1) || (donor.mosquito == 1) || (donor.days14over == 0) || (donor.pregnant == 1) )
 
-  let notAllowedMsg =`<br>Unfortunately you did not meet the criteria for plasma donation.<br> Feel free to reach out to us for any further queries.`
+  let notAllowedMsg =`\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
 
 
 
