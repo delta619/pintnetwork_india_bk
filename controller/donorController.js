@@ -21,8 +21,6 @@ const path = require('path');
 const initiateMatch = require('../MatchAlgorithm/main');
 const bodyParser = require("body-parser");
 
-// const factory = require("./handlerFactory");
-
 exports.getAllDonors = catchAsync(async (req, res, next) => {
   const donors = await Donor.find({});
 
@@ -71,7 +69,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
   
   try{
-    await pdf.renderDonorEmail(form_details)
+     pdf.renderDonorEmail(form_details)
     console.log("PDF generated of donor ");
     
   }catch(err){
@@ -81,25 +79,29 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
     let donor_email_attachment = path.join(__dirname, ".." , "userdata" , "emails", `${donor.contact}.pdf`)
 
-    try{
+ 
 
-      await email.sendDonorAttachment({
+      email.sendDonorAttachment({
         email: donor.email,
         subject: 'Welcome to PintNetwork',
         donor,
         message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
+      }).then(()=>{
+        fs.unlink(`./userdata/emails/${donor.contact}.pdf` ,(err)=>{
+          if(err){
+            console.log("Cant delete file to save up attachment space");
+          }
+        })
+     
+      }).catch(err=>{
+        console.log("Error while sending Attachment to donor",err);
+        
       })
 
-    }catch(err){
-      console.log("Email with attachment is the error",err);
-      
-    }
-
-
     
-  fs.unlinkSync(donor_email_attachment)
+   
 
-  initiateMatch();
+    initiateMatch();
 
     res.status(200).json({
       status: 'Success',
