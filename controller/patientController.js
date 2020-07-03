@@ -7,6 +7,7 @@ const sms = require('../utils/smsService');
 
 const initiateMatch = require('../MatchAlgorithm/main');
 
+const pdf = require('../utils/pdfModule/pdfGenerator')
 
 exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
@@ -29,9 +30,12 @@ exports.addPatient = catchAsync(async (req, res, next) => {
       // })
       
 
+
+
+
      sendEmail({
       email: patient.email,
-      subject: 'PINTNETWORK',
+      subject: 'Welcome to PintNetwork',
       message: `Hi ${patient.name}\nWelcome aboard to Pintnetwork.com community.`
     }).catch(err=>{
       console.log("Error sending Welcome mail to Patient",err);

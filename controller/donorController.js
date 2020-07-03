@@ -7,6 +7,8 @@ const Patient = require("../models/patientModel");
 const connectPeople = require('../utils/matchPeople');
 const sms = require('../utils/smsService');
 
+const pdf = require('../utils/pdfModule/pdfGenerator')
+
 const initiateMatch = require('../MatchAlgorithm/main');
 
 // const factory = require("./handlerFactory");
@@ -51,9 +53,26 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   let notHealthyMsg =`\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
 
 
+
+  
+  // try{
+  //    pdf.renderDonorEmail(donor)
+  //   console.log("PDF generated of donor ");
+    
+  // }catch(err){
+  //   console.log("Error generating pdf .",err);
+    
+  // }
+  // console.log("Came out of generation");
+  
+
+
+
+
+
   sendEmail({
     email: donor.email,
-    subject: 'PINTNETWORK',
+    subject: 'Welcome to PintNetwork',
     message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
   }).catch(err=>{
     console.log("Error sending Welcome mail to Donor",err);
