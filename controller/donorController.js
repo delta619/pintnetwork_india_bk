@@ -1,14 +1,22 @@
-const Donor = require("../models/donorModel");
-const catchAsync = require("../utils/catchAsync");
-const APIFeatures = require("../utils/apiFeatures");
-const AppError = require("../utils/AppError");
-const sendEmail = require('./../utils/email');
-const Patient = require("../models/patientModel");
-const connectPeople = require('../utils/matchPeople');
-const sms = require('../utils/smsService');
-const fs = require('fs');
+const constants = require('../constants');
 
+const Donor = require("../models/donorModel");
+const Patient = require("../models/patientModel");
+
+
+const catchAsync = require("../utils/catchAsync");
+const sendEmail = require('./../utils/email');
+
+const sms = require('../utils/smsService');
 const pdf = require('../utils/pdfModule/pdfGenerator')
+
+const AppError = require("../utils/AppError");
+
+const fs = require('fs');
+const path = require('path');
+
+
+
 
 const initiateMatch = require('../MatchAlgorithm/main');
 const bodyParser = require("body-parser");
@@ -67,18 +75,20 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     console.log("PDF generated of donor ");
     
   }catch(err){
-    console.log("Error generating pdf .",err);
+    console.log("Error generating donorBio pdf. ",err);
     
   }
+
+    let donor_email_attachment = path.join(__dirname, ".." , "userdata" , "emails", `${donor.email}.pdf`)
 
     await sendEmail({
       email: donor.email,
       subject: 'Welcome to PintNetwork',
-      attachment : __dirname`/userdata/sandbox_emails/${donor.contact}.pdf`,
+      attachment : `${donor_email_attachment}`,
       message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
     })
     
-   fs.unlinkSync(__dirname+`/userdata/sandbox_emails/${donor.contact}.pdf`)
+   fs.unlinkSync(donor_email_attachment)
 
   initiateMatch();
 
