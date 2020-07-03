@@ -74,11 +74,11 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     await sendEmail({
       email: donor.email,
       subject: 'Welcome to PintNetwork',
-      attachment : `./userdata/sandbox_emails/${donor.contact}.pdf`,
+      // attachment : `./userdata/sandbox_emails/${donor.contact}.pdf`,
       message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
     })
     
-   fs.unlinkSync(`./userdata/sandbox_emails/${donor.contact}.pdf`)
+  //  fs.unlinkSync(`./userdata/sandbox_emails/${donor.contact}.pdf`)
 
   initiateMatch();
 
