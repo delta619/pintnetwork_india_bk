@@ -1,3 +1,3 @@
 module.exports = {
-    matchRunning:false
+    EMAIL_ATTACHMENT_PATH:`${__dirname}/userdata/sandbox_emails`
 }

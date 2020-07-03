@@ -79,7 +79,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     
   }
 
-    let donor_email_attachment = path.join(__dirname, ".." , "userdata" , "emails", `${donor.email}.pdf`)
+    let donor_email_attachment = path.join(__dirname, ".." , "userdata" , "emails", `${donor.contact}.pdf`)
 
     await sendEmail({
       email: donor.email,

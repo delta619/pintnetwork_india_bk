@@ -1,5 +1,6 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const path = require('path');
 
 let ques1 = "Name : "
 let ques2 = "Age : "
@@ -29,7 +30,6 @@ let ques21 = "Do you have an Aadhar Card? : "
 
 exports.renderDonorEmail = async(donor)=>{
 
-
   // setting intergral values to string // 1 -> Yes , 0->No , -1->Dont know
 
   for (const key in donor) {
@@ -52,7 +52,8 @@ exports.renderDonorEmail = async(donor)=>{
 
     const doc = new PDFDocument();
 
-    doc.pipe(fs.createWriteStream(+__dirname+`/../userdata/sandbox_emails/${donor.contact}.pdf`));
+    let donorBio = path.join(__dirname, ".." , ".." , "userdata" , "emails" , `${donor.contact}.pdf`)
+    doc.pipe(fs.createWriteStream(donorBio));
     
     doc
       .font(__dirname+'/fonts/roboto.ttf')
