@@ -32,7 +32,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     contact:donor.contact
   })
 
-  let isAllowed = ((donor.hiv != 1) || (donor.mosquito != 1) || (donor.days14over == 1) || (donor.pregnant != 1) )
+  let isNotAllowed = ((donor.hiv == 1) || (donor.mosquito == 1) || (donor.days14over == 0) || (donor.pregnant == 1) )
 
   let notAllowedMsg =`<br>Unfortunately you did not meet the criteria for plasma donation.<br> Feel free to reach out to us for any further queries.`
 
@@ -41,11 +41,11 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   sendEmail({
     email: donor.email,
     subject: 'PINTNETWORK',
-    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!isAllowed?notAllowedMsg:''}`
+    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${isNotAllowed?notAllowedMsg:''}`
   });
 
 
-  if(isAllowed){
+  if(!isNotAllowed){
     connectPeople.match(donor);
   }
 
