@@ -1,11 +1,17 @@
 const Donor = require("../models/donorModel");
 const Patient = require("../models/patientModel");
+
 const email = require('./email');
-const catchAsync = require("./catchAsync");
+const sms = require('./smsService');
+
 const AppError = require("./AppError");
 const pdf = require('../utils/pdfModule/pdfGenerator')
 const constants = require('../constants')
 const fs = require('fs')
+
+
+
+
 
 
 let bloodMatchCheck = (currentDonor, currentPatient) => {
@@ -19,7 +25,7 @@ let bloodMatchCheck = (currentDonor, currentPatient) => {
 
     if ((currentDonor.blood == "A+" || currentDonor.blood == "A-")
         &&
-        (currentPatient.blood == "A+" || currentPatient.blood == "A-" || currentPatient.blood == "AB+" || currentPatient.blood == "A-")
+        (currentPatient.blood == "A+" || currentPatient.blood == "A-" || currentPatient.blood == "AB+" || currentPatient.blood == "AB-")
     ) {
         // console.log("Matched case", 2);
         return true;
@@ -27,7 +33,7 @@ let bloodMatchCheck = (currentDonor, currentPatient) => {
 
     if ((currentDonor.blood == "B+" || currentDonor.blood == "B-")
         &&
-        (currentPatient.blood == "B+" || currentPatient.blood == "B-" || currentPatient.blood == "AB+" || currentPatient.blood == "A-")
+        (currentPatient.blood == "B+" || currentPatient.blood == "B-" || currentPatient.blood == "AB+" || currentPatient.blood == "AB-")
     ) {
         // console.log("Matched case", 3);
         return true;
@@ -61,6 +67,10 @@ exports.isMatch = (d, p) => {
 
 exports.match = async (currentDonor, currentPatient) => {
 
+    let session_otp = 1000 + Math.round((Math.random()*9000));
+
+    currentDonor.otp = session_otp;
+    currentPatient.otp = session_otp;
 
     // Preparing attachment for donor
 
@@ -115,12 +125,43 @@ exports.match = async (currentDonor, currentPatient) => {
             City:  ${currentDonor.city}\n
             Thank you for believing in us and we hope our services could help you recover faster.\n
             P.S: Do let us know if the match turned out to be successful and if you’d be interested in donating as well post-recovery.\n\n Pintnetwork.com ©`
-        })
-        .then(() => {
+        }).then(() => {
         })
         .catch(e => {
             console.log("Mail to Patient was unsuccessful ", e.message);
         })
+        
+        ,
+        sms.sendMatchResponseDonor({
+            
+            to:currentDonor.contact,
+            var1:currentDonor.name,
+            var2:session_otp
+
+        }).then(()=>{
+
+        }).catch(err=>{
+            console.log(err);
+        })
+
+        ,
+
+        sms.sendMatchResponsePatient({
+            to:currentPatient.contact,
+            var1:currentPatient.name,
+            var2:currentDonor.sex=="M"?"his":"her",
+            var3:currentDonor.name,
+            var4:currentDonor.contact,
+            var5:currentDonor.email,
+            var6:session_otp
+
+        }).then(()=>{
+
+        }).catch(err=>{
+            console.log(err);
+            
+        })
+
     ])
     .then(() => {
         fs.unlink(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor.contact}.pdf`,(err)=>{
