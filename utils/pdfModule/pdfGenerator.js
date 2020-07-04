@@ -46,8 +46,6 @@ exports.renderDonorEmail = async(donor)=>{
   // setting intergral values to string // 1 -> Yes , 0->No , -1->Dont know
 
   for (const key in donor) {
-    if (donor.hasOwnProperty(key)) {
-         
       if(donor[key] == 1){
         donor[key] = "Yes"
       } else if (donor[key] == 0){
@@ -55,8 +53,7 @@ exports.renderDonorEmail = async(donor)=>{
       }else if (donor[key] == -1){
         donor[key] = "Dont know"
       }
-      
-    }
+
   }
 
 
