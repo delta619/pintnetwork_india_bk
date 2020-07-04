@@ -30,31 +30,27 @@ let ques21 = "Do you have an Aadhar Card? : "
 
 exports.renderDonorEmail = async(donor)=>{
 
-  for (const key in donor) {
-    if (donor.hasOwnProperty(key)) {
-      
-      if(donor[key] == 1){
-        donor[key] = "Yes"
-      }else if (donor[key] == 0 ){
-        donor[key] = "No"
-      }else if(donor[key] == -1){
-        donor[key] = "Dont Know"
-      }
-    }
-  }
 
   // setting intergral values to string // 1 -> Yes , 0->No , -1->Dont know
 
-  for (const key in donor) {
+
+  let fields = ["pregnant","tattoo","bp","anemia","hiv","mosquito","cancer","flu","labTestConfirm","labTestConfirm","days14over","dischargeReport","aadhaar"]
+
+  textValOf = {}
+
+  fields.forEach(key => {
+
       if(donor[key] == 1){
-        donor[key] = "Yes"
-      } else if (donor[key] == 0){
-        donor[key] = "No"
-      }else if (donor[key] == -1){
-        donor[key] = "Dont know"
+        textValOf[key] = "Yes"
+      }else if(donor[key] == 0){
+        textValOf[key] = "No"
+      }else if(donor[key] == -1){
+        textValOf[key] = "Dont know"
+      }else if(donor[key] == null){
+        textValOf[key] = "Unavailable"
       }
 
-  }
+    });
 
 
     let list_char = "• "
@@ -79,19 +75,19 @@ exports.renderDonorEmail = async(donor)=>{
       .text(`${list_char} ${ques7} ${donor.weight}`)
       .text(`${list_char} ${ques8} ${donor.city}`)
       .moveDown()
-      .text(`${list_char} ${ques9} ${donor.pregnant}`)
-      .text(`${list_char} ${ques10} ${donor.tattoo}`)
-      .text(`${list_char} ${ques11} ${donor.bp}`)
-      .text(`${list_char} ${ques12} ${donor.anemia}`)
-      .text(`${list_char} ${ques13} ${donor.hiv}`)
-      .text(`${list_char} ${ques14} ${donor.mosquito}`)
-      .text(`${list_char} ${ques15} ${donor.cancer}`)
-      .text(`${list_char} ${ques16} ${donor.flu}`)
-      .text(`${list_char} ${ques17} ${donor.labTestConfirm}`)
-      .text(`${list_char} ${ques18} ${donor.days14over}`)
+      .text(`${list_char} ${ques9} ${textValOf.pregnant}`)
+      .text(`${list_char} ${ques10} ${textValOf.tattoo}`)
+      .text(`${list_char} ${ques11} ${textValOf.bp}`)
+      .text(`${list_char} ${ques12} ${textValOf.anemia}`)
+      .text(`${list_char} ${ques13} ${textValOf.hiv}`)
+      .text(`${list_char} ${ques14} ${textValOf.mosquito}`)
+      .text(`${list_char} ${ques15} ${textValOf.cancer}`)
+      .text(`${list_char} ${ques16} ${textValOf.flu}`)
+      .text(`${list_char} ${ques17} ${textValOf.labTestConfirm}`)
+      .text(`${list_char} ${ques18} ${textValOf.days14over}`)
       .text(`${list_char} ${ques19} ${donor.last_symptom_discharge_date}`)
-      .text(`${list_char} ${ques20} ${donor.dischargeReport}`)
-      .text(`${list_char} ${ques21} ${donor.aadhaar}`)
+      .text(`${list_char} ${ques20} ${textValOf.dischargeReport}`)
+      .text(`${list_char} ${ques21} ${textValOf.aadhaar}`)
 
        
     doc.end();
