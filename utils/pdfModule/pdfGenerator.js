@@ -46,7 +46,6 @@ exports.renderDonorEmail = async(donor)=>{
     }
   }
 
-    console.log("inside pdf creation");
 
     let list_char = "• "
     const doc = new PDFDocument();
@@ -86,7 +85,7 @@ exports.renderDonorEmail = async(donor)=>{
        
     doc.end();
   } catch (error) {
-    console.log("error while rendering pdf");      
+    console.log("error while rendering pdf",error);      
   }
 
 }

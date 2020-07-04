@@ -1,25 +1,14 @@
 const constants = require('../constants');
 
 const Donor = require("../models/donorModel");
-const Patient = require("../models/patientModel");
 
 
 const catchAsync = require("../utils/catchAsync");
 const email = require('./../utils/email');
 
 const sms = require('../utils/smsService');
-const pdf = require('../utils/pdfModule/pdfGenerator')
-
-const AppError = require("../utils/AppError");
-
-const fs = require('fs');
-const path = require('path');
-
-
-
 
 const initiateMatch = require('../MatchAlgorithm/main');
-const bodyParser = require("body-parser");
 
 exports.getAllDonors = catchAsync(async (req, res, next) => {
   const donors = await Donor.find({});
@@ -33,92 +22,66 @@ exports.getAllDonors = catchAsync(async (req, res, next) => {
 
 
 exports.addDonor = catchAsync(async (req, res, next) => {
-   
-
-  let donor = req.body;
-
-
-  // copying for the pdf
-  let form_details = JSON.parse(JSON.stringify(donor));
-
-  // donor preprocessing
-  if(donor.hiv == -1)donor.hiv=0;
-  if(donor.mosquito == -1)donor.mosquito=0;
-  if(donor.bp == -1)donor.dp=0;
-  if(donor.cancer == -1)donor.cancer=0;
 
 
 
+  let donor = JSON.parse(JSON.stringify(req.body));
 
-  let healthy = ((donor.hiv == 0) && (donor.mosquito == 0) && (donor.days14over == 1) && (donor.pregnant == 0) )
+
+  donor.healthy = (
+    (donor.hiv != 1)
+    &&
+    (donor.mosquito != 1)
+    &&
+    (donor.days14over == 1)
+    &&
+    (donor.pregnant == 0)
+  )
 
 
-  console.log("the donor is",healthy?"Healthy ":"Not Healthy");
+  console.log("The donor is", donor.healthy ? "Healthy " : "Not Healthy");
 
-  
-  const uploaded_donor = await Donor.create(donor);
-    
 
-  sms.sendWelcomeMessage({
-    name:donor.name,
-    contact:donor.contact
+  await Donor.create(donor)
+  .catch(err=>{
+    console.log(err);
   })
 
 
-  let notHealthyMsg =`\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
+  sms.sendWelcomeMessage({
+    name: donor.name,
+    contact: donor.contact
+  })
 
-  
-  try{
-     pdf.renderDonorEmail(form_details)
-    console.log("PDF generated of donor ");
-    
-  }catch(err){
-    console.log("Error generating donorBio pdf. ",err);
-    
-  }
 
-    let donor_email_attachment = path.join(__dirname, ".." , "userdata" , "emails", `${donor.contact}.pdf`)
+  let notHealthyMsg = `\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
 
- 
+  email.sendEmailPlain({
+    email: donor.email,
+    subject: 'Welcome to PintNetwork',
+    donor,
+    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!donor.healthy ? notHealthyMsg : ''}`,
+  })
 
-      email.sendDonorAttachment({
-        email: donor.email,
-        subject: 'Welcome to PintNetwork',
-        donor,
-        message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!healthy?notHealthyMsg:''}`
-      }).then(()=>{
-        fs.unlink(`./userdata/emails/${donor.contact}.pdf` ,(err)=>{
-          if(err){
-            console.log("Cant delete file to save up attachment space");
-          }
-        })
-     
-      }).catch(err=>{
-        console.log("Error while sending Attachment to donor",err);
-        
-      })
+  // WILDCASE BEFORE PRODUCTION
 
-    
-   
+  initiateMatch();
 
-    initiateMatch();
-
-    res.status(200).json({
-      status: 'Success',
-      results: donor.length,
-      data: uploaded_donor,
-    });
+  res.status(200).json({
+    status: 'Success',
+    data: donor,
   });
+});
 
-  exports.deleteAllDonors = catchAsync(async (req, res, next) => {
-    const donors = await Donor.deleteMany({});
-  
-    res.status(200).json({
-      status: 'Success',
-      results: donors.length,
-      data: donors,
-    });
+exports.deleteAllDonors = catchAsync(async (req, res, next) => {
+  const donors = await Donor.deleteMany({});
+
+  res.status(200).json({
+    status: 'Success',
+    results: donors.length,
+    data: donors,
   });
+});
 
 
 
@@ -149,13 +112,13 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 // exports.createTour = factory.createOne(Tour);
 
 // // exports.getTour = catchAsync (async (req , res)=>{
-   
+
 
 // //         const tour = await Tour.findById(req.params.id)
 // //         .populate({
 // //             path:'reviews',
 // //         })
-        
+
 // //         res.status(200).json({
 // //             status:"success",
 // //             data:tour
@@ -168,13 +131,13 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 // exports.getTour = factory.getOne(Tour, {path: 'reviews'})
 
 // // exports.updateTour = catchAsync(async (req , res)=>{
-   
-   
+
+
 // //         const tour = await Tour.findByIdAndUpdate(req.params.id , req.body , {
 // //             new:true,
 // //             runValidators:true
 // //         });
-        
+
 // //         res.status(200).json({
 // //             status:"success",
 // //             data:{
@@ -188,7 +151,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
 
 // // exports.deleteTour = catchAsync(async (req , res)=>{
-    
+
 // //         await Tour.findByIdAndDelete(req.params.id);
 
 // //         if(!tour){
@@ -205,7 +168,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
 // exports.getTourStats = catchAsync ( async (req , res)=>{
 
-    
+
 //         const stats = await Tour.aggregate([
 //             {
 //                 $match:{ratingsAverage:{$gte:4.5}}
@@ -233,12 +196,12 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 //             }
 //         })
 
-   
+
 
 // })
 
 // exports.getMonthlyPlan = catchAsync (async(req , res)=>{
-    
+
 
 //         const year = req.params.year * 1;
 
@@ -275,11 +238,11 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 //             },
 //             // {
 //             //     $project:{
-                    
+
 //             //     }
 //             // }
 //         ])
-        
+
 //         res.status(200).json({
 //             status:'success',
 //             data:{
@@ -287,7 +250,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 //                 plan
 //             }
 //         })
-    
+
 // })
 
 // exports.getToursWithin = catchAsync(async(req , res , next)=>{
@@ -298,7 +261,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 //     if(!lat || !lng){
 //         return next(new AppError("Latitude or Longitude is missing",400));
 //     }
-    
+
 //     const radius = unit === 'mi' ? distance/3963.2 : distance/6378.1;
 
 //     const tours = await Tour.find({startLocation:{

@@ -1,3 +1,3 @@
 module.exports = {
-    EMAIL_ATTACHMENT_PATH:`${__dirname}/userdata/sandbox_emails`
+    DONOR_FORM_ATTACHMENT_PATH:`${__dirname}/userdata/emails`
 }

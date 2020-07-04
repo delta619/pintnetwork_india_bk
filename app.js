@@ -1,5 +1,4 @@
 const express = require("express");
-const initiateMatch = require('./MatchAlgorithm/main')
 
 
 const app = express();
@@ -59,15 +58,6 @@ app.use(express.urlencoded({extended:true}))
 app.use('/api/donor',donorRoute);
 app.use('/api/patient',patietRoute)
 // app.use('/api/admin',adminRoute)
-
-
-    
-    initiateMatch();
-
-
-
-
-
 
 
 app.all('*',(req , res , next)=>{

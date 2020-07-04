@@ -4,51 +4,45 @@ const path = require('path');
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
-  // secure: false,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD
   }
-});    
+});
 
 
 
-exports.sendText = async options =>{ 
+exports.sendEmailPlain = async options => {
 
-    const mailOptions = {
-        from: 'Pint Network <admin@pintnetwork.com>',
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
-        envelope: {
-        from: 'Pint Network <admin@pintnetwork.com>',
-        to: options.email 
-      }
+  const mailOptions = {
+    from: 'Pint Network <admin@pintnetwork.com>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message,
+    envelope: {
+      from: 'Pint Network <admin@pintnetwork.com>',
+      to: options.email
     }
-  await transporter.sendMail(mailOptions);
+  }
+  return transporter.sendMail(mailOptions);
 }
 
 
-exports.sendDonorAttachment = async options =>{ 
-
-
-  let DonorAttachment = path.join(__dirname , ".." , "userdata" , "emails", `${options.donor.contact}.pdf`);
+exports.sendEmailWithAttachments = async options => {
 
   const mailOptions = {
+    from: 'Pint Network <admin@pintnetwork.com>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message,
+    attachments: options.attachments,
+    envelope: {
       from: 'Pint Network <admin@pintnetwork.com>',
-      to: options.email,
-      subject: options.subject,
-      text: options.message,
-      attachments:[{
-        filename:"DonorForm.pdf",
-        path:DonorAttachment,
-      }],
-      envelope: {
-        from: 'Pint Network <admin@pintnetwork.com>', 
-        to: options.email 
+      to: options.email
     }
   }
 
-await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 }
 

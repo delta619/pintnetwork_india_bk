@@ -1,8 +1,11 @@
 const Donor = require("../models/donorModel");
 const Patient = require("../models/patientModel");
-const sendEmail = require('./email');
+const email = require('./email');
 const catchAsync = require("./catchAsync");
 const AppError = require("./AppError");
+const pdf = require('../utils/pdfModule/pdfGenerator')
+const constants = require('../constants')
+const fs = require('fs')
 
 
 let bloodMatchCheck = (currentDonor, currentPatient) => {
@@ -10,7 +13,7 @@ let bloodMatchCheck = (currentDonor, currentPatient) => {
         &&
         (currentPatient.blood == "O+" || currentPatient.blood == "O-")
     ) {
-        console.log("Matched case", 1);
+        // console.log("Matched case", 1);
         return true;
     }
 
@@ -18,7 +21,7 @@ let bloodMatchCheck = (currentDonor, currentPatient) => {
         &&
         (currentPatient.blood == "A+" || currentPatient.blood == "A-" || currentPatient.blood == "AB+" || currentPatient.blood == "A-")
     ) {
-        console.log("Matched case", 2);
+        // console.log("Matched case", 2);
         return true;
     }
 
@@ -26,7 +29,7 @@ let bloodMatchCheck = (currentDonor, currentPatient) => {
         &&
         (currentPatient.blood == "B+" || currentPatient.blood == "B-" || currentPatient.blood == "AB+" || currentPatient.blood == "A-")
     ) {
-        console.log("Matched case", 3);
+        // console.log("Matched case", 3);
         return true;
     }
 
@@ -34,7 +37,7 @@ let bloodMatchCheck = (currentDonor, currentPatient) => {
         &&
         (currentPatient.blood == "O+" || currentPatient.blood == "O-" || currentPatient.blood == "A+" || currentPatient.blood == "A-" || currentPatient.blood == "B+" || currentPatient.blood == "B-" || currentPatient.blood == "AB+" || currentPatient.blood == "AB-")
     ) {
-        console.log("Matched case", 4);
+        // console.log("Matched case", 4);
         return true;
     }
 }
@@ -58,15 +61,22 @@ exports.isMatch = (d, p) => {
 
 exports.match = async (currentDonor, currentPatient) => {
 
-    console.log("Sending mails");
+
+    // Preparing attachment for donor
 
     try {
-        await Promise.all([
+        await pdf.renderDonorEmail(currentDonor)
 
-            sendEmail({
-                email: currentDonor.email,
-                subject: 'PintNetwork - Patient Found',
-                message: `\n\n
+    } catch (e) {
+        console.log(e);
+    }
+
+    Promise.all([
+
+        email.sendEmailWithAttachments({
+            email: currentDonor.email,
+            subject: 'PintNetwork - Patient Found',
+            message: `\n\n
                 Dear Mr./Ms. ${currentDonor.name},\n
                 Great news! We’ve found you a patient who needs plasma.\n
                 Provided below are the contact details of the patient in need:\n
@@ -78,17 +88,25 @@ exports.match = async (currentDonor, currentPatient) => {
                 We’ve attached below a copy of your medical history to ease the process of donation.\n
                 Thank you for believing in us and for your relentless service to humanity.\n
                 You are one step closer to saving a life.\n
-                P.S : Do let us know if the match turned out to be successful and if we can assist you in any further way.\n\n Pintnetwork.com ©
-            `
-            }).catch(e => {
-                console.log("Mail to Patient was unsuccessful ", e.message);
+                P.S : Do let us know if the match turned out to be successful and if we can assist you in any further way.\n\n Pintnetwork.com ©`,
+            attachments: [{
+                filename: `${currentDonor.name} Donor Form.pdf`,
+                path: `${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor.contact}.pdf`
+            }],
+        })
+            .then(() => {
+            })
+            .catch(e => {
+                console.log("Mail to Donor was unsuccessful ", e.message);
+            })
 
-            }),
+        ,
 
-            sendEmail({
-                email: currentPatient.email,
-                subject: 'PintNetwork - Donor Found',
-                message: `Dear Mr./Ms. ${currentPatient.name},\n
+        email.sendEmailPlain({
+            email: currentPatient.email,
+            subject: 'PintNetwork - Donor Found',
+            message: `\n\n
+                Dear Mr./Ms. ${currentPatient.name},\n
             Great news! We’ve found you a donor.\n
             Provided below are the contact details of your nearest donor:\n
             Name:  ${currentDonor.name}\n
@@ -97,16 +115,21 @@ exports.match = async (currentDonor, currentPatient) => {
             City:  ${currentDonor.city}\n
             Thank you for believing in us and we hope our services could help you recover faster.\n
             P.S: Do let us know if the match turned out to be successful and if you’d be interested in donating as well post-recovery.\n\n Pintnetwork.com ©`
-            })])
-            .catch(e => {
-                console.log("Mail to Donor was unsuccessful ", e.message);
-
-            })
-
-    } catch (err) {
-        console.log("Error in Match email send block");
-    }
-
-    // console.log("$ matched email sent $");
-
+        })
+        .then(() => {
+        })
+        .catch(e => {
+            console.log("Mail to Patient was unsuccessful ", e.message);
+        })
+    ])
+    .then(() => {
+        fs.unlink(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor.contact}.pdf`,(err)=>{
+            if(err){
+                console.log(`Could not delete donor email rendered pdf to save up space`,err);
+            }
+        })
+    })
+    .catch(e => {
+        console.log("Mail to Patient was unsuccessful ", e);
+    })
 }

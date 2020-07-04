@@ -1,13 +1,10 @@
 const Patient = require("../models/patientModel");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("../utils/apiFeatures");
-const AppError = require("../utils/AppError");
-const sendEmail = require('./../utils/email');
+const email = require('./../utils/email');
 const sms = require('../utils/smsService');
 
 const initiateMatch = require('../MatchAlgorithm/main');
-
-const pdf = require('../utils/pdfModule/pdfGenerator')
 
 exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
@@ -21,52 +18,50 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
 
 
 exports.addPatient = catchAsync(async (req, res, next) => {
-    const patient = await Patient.create(req.body);
-      
-
-      // sms.sendWelcomeMessage({
-      //   name:patient.name,
-      //   contact:patient.contact
-      // })
-      
+  const patient = await Patient.create(req.body);
 
 
+  sms.sendWelcomeMessage({
+    name: patient.name,
+    contact: patient.contact
+  })
 
-
-     sendEmail({
-      email: patient.email,
-      subject: 'Welcome to PintNetwork',
-      message: `Hi ${patient.name}\nWelcome aboard to Pintnetwork.com community.`
-    }).catch(err=>{
-      console.log("Error sending Welcome mail to Patient",err);
-      
-    });
-
-
-    // Initiate Match
-
-
-    initiateMatch();
-
-
-
-
-    res.status(200).json({
-      status: 'Success',
-      results: patient.length,
-      data: patient,
-    });
-  });
-
-  exports.deleteAllPatients = catchAsync(async (req, res, next) => {
-    const patients = await Patient.deleteMany({});
   
-    res.status(200).json({
-      status: 'Success',
-      results: patients.length,
-      data: patients,
-    });
+
+  email.sendEmailPlain({
+    email: patient.email,
+    subject: 'Welcome to PintNetwork',
+    message: `Hi ${patient.name}\nWelcome aboard to Pintnetwork.com community.`
+  }).catch(err => {
+    console.log("Error sending Welcome mail to Patient", err);
+
   });
+
+
+  // Initiate Match
+
+
+  initiateMatch();
+
+
+
+
+  res.status(200).json({
+    status: 'Success',
+    results: patient.length,
+    data: patient,
+  });
+});
+
+exports.deleteAllPatients = catchAsync(async (req, res, next) => {
+  const patients = await Patient.deleteMany({});
+
+  res.status(200).json({
+    status: 'Success',
+    results: patients.length,
+    data: patients,
+  });
+});
 
 
 
@@ -97,13 +92,13 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 // exports.createTour = factory.createOne(Tour);
 
 // // exports.getTour = catchAsync (async (req , res)=>{
-   
+
 
 // //         const tour = await Tour.findById(req.params.id)
 // //         .populate({
 // //             path:'reviews',
 // //         })
-        
+
 // //         res.status(200).json({
 // //             status:"success",
 // //             data:tour
@@ -116,13 +111,13 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 // exports.getTour = factory.getOne(Tour, {path: 'reviews'})
 
 // // exports.updateTour = catchAsync(async (req , res)=>{
-   
-   
+
+
 // //         const tour = await Tour.findByIdAndUpdate(req.params.id , req.body , {
 // //             new:true,
 // //             runValidators:true
 // //         });
-        
+
 // //         res.status(200).json({
 // //             status:"success",
 // //             data:{
@@ -136,7 +131,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 
 
 // // exports.deleteTour = catchAsync(async (req , res)=>{
-    
+
 // //         await Tour.findByIdAndDelete(req.params.id);
 
 // //         if(!tour){
@@ -153,7 +148,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 
 // exports.getTourStats = catchAsync ( async (req , res)=>{
 
-    
+
 //         const stats = await Tour.aggregate([
 //             {
 //                 $match:{ratingsAverage:{$gte:4.5}}
@@ -181,12 +176,12 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 //             }
 //         })
 
-   
+
 
 // })
 
 // exports.getMonthlyPlan = catchAsync (async(req , res)=>{
-    
+
 
 //         const year = req.params.year * 1;
 
@@ -223,11 +218,11 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 //             },
 //             // {
 //             //     $project:{
-                    
+
 //             //     }
 //             // }
 //         ])
-        
+
 //         res.status(200).json({
 //             status:'success',
 //             data:{
@@ -235,7 +230,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 //                 plan
 //             }
 //         })
-    
+
 // })
 
 // exports.getToursWithin = catchAsync(async(req , res , next)=>{
@@ -246,7 +241,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 //     if(!lat || !lng){
 //         return next(new AppError("Latitude or Longitude is missing",400));
 //     }
-    
+
 //     const radius = unit === 'mi' ? distance/3963.2 : distance/6378.1;
 
 //     const tours = await Tour.find({startLocation:{
