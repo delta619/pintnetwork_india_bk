@@ -130,36 +130,36 @@ exports.match = async (currentDonor, currentPatient) => {
         .catch(e => {
             console.log("Mail to Patient was unsuccessful ", e.message);
         })
-        // ,
-        // sms.sendMatchResponseDonor({
+        ,
+        sms.sendMatchResponseDonor({
             
-        //     to:currentDonor.contact,
-        //     var1:currentDonor.name,
-        //     var2:session_otp
+            to:currentDonor.contact,
+            var1:currentDonor.name,
+            var2:session_otp
 
-        // }).then(()=>{
+        }).then(()=>{
 
-        // }).catch(err=>{
-        //     console.log(err);
-        // })
+        }).catch(err=>{
+            console.log(err);
+        })
 
-        // ,
+        ,
 
-        // sms.sendMatchResponsePatient({
-        //     to:currentPatient.contact,
-        //     var1:currentPatient.name,
-        //     var2:currentDonor.sex=="M"?"his":"her",
-        //     var3:currentDonor.name,
-        //     var4:currentDonor.contact,
-        //     var5:currentDonor.email,
-        //     var6:session_otp
+        sms.sendMatchResponsePatient({
+            to:currentPatient.contact,
+            var1:currentPatient.name,
+            var2:currentDonor.sex=="M"?"his":"her",
+            var3:currentDonor.name,
+            var4:currentDonor.contact,
+            var5:currentDonor.email,
+            var6:session_otp
 
-        // }).then(()=>{
+        }).then(()=>{
 
-        // }).catch(err=>{
-        //     console.log(err);
+        }).catch(err=>{
+            console.log(err);
             
-        // })
+        })
 
     ])
     .then(() => {
