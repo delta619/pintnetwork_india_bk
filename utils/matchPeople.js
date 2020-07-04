@@ -130,7 +130,6 @@ exports.match = async (currentDonor, currentPatient) => {
         .catch(e => {
             console.log("Mail to Patient was unsuccessful ", e.message);
         })
-        
         ,
         sms.sendMatchResponseDonor({
             

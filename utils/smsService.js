@@ -54,8 +54,8 @@ exports.sendMatchResponsePatient =async (data) =>{
                VAR2:data.var2,  //his/her
                VAR3:data.var3,  //name donor
                VAR4:data.var4,  //contact donor
-               VAR5:data.var5,   //email donor
-               VAR6:data.var6
+               VAR5:data.var5,  //email donor
+               VAR6:data.var6   //
           }
      }).then((res)=>{
           return true;

@@ -30,6 +30,19 @@ let ques21 = "Do you have an Aadhar Card? : "
 
 exports.renderDonorEmail = async(donor)=>{
 
+  for (const key in donor) {
+    if (donor.hasOwnProperty(key)) {
+      
+      if(donor[key] == 1){
+        donor[key] = "Yes"
+      }else if (donor[key] == 0 ){
+        donor[key] = "No"
+      }else if(donor[key] == -1){
+        donor[key] = "Dont Know"
+      }
+    }
+  }
+
   // setting intergral values to string // 1 -> Yes , 0->No , -1->Dont know
 
   for (const key in donor) {
@@ -54,10 +67,11 @@ exports.renderDonorEmail = async(donor)=>{
       let donorBio = path.join(__dirname, ".." , ".." , "userdata" , "emails" , `${donor.contact}.pdf`)
       doc.pipe(fs.createWriteStream(donorBio));
 
+
     
 
     doc
-      .font(__dirname+'/fonts/roboto.ttf')
+      .font(__dirname+'/fonts/poppins.ttf')
       .fontSize(14)
       .text(`${list_char} ${ques1} ${donor.name}`)
       .text(`${list_char} ${ques2} ${donor.age}`)
