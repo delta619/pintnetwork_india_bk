@@ -12,8 +12,8 @@ exports.checkAdminLogin = catchAsync(async (req, res, next) => {
     
 
     return res.json({
-        status:validKey?200:500,
-        valid: validKey ? 200 : 500
+        status:validKey?200:401,
+        valid: validKey ? 200 : 401
     })
 
 })
