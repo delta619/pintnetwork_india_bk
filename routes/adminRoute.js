@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const matchController = require("../controller/matchController");
-
+const adminController = require("../controller/adminController")
 router
 .route('/match')
-.get(matchController.matchAllNow)
+.get(adminController.matchAllNow)
+
+
+router.
+route('/checkAdminLogin')
+.post(adminController.checkAdminLogin)
 
 module.exports = router

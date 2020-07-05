@@ -9,7 +9,7 @@ exports.sendWelcomeMessage = async (options) =>{
           data:{
                From: 'PINTNW',
                To:options.contact,
-               TemplateName:'register-NAME',
+               TemplateName:'greeting_v2',
                VAR1:options.name
           }
      }).then((res)=>{
