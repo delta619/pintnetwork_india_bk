@@ -12,7 +12,6 @@ const transporter = nodemailer.createTransport({
 });
 
 
-
 exports.sendEmailPlain = async (options) => {
 
   const mailOptions = {
@@ -35,7 +34,7 @@ exports.sendEmailWithAttachments = async options => {
     from: 'Pint Network <admin@pintnetwork.com>',
     to: options.email,
     subject: options.subject,
-    text: options.message,
+    html: options.message,
     attachments: options.attachments,
     envelope: {
       from: 'Pint Network <admin@pintnetwork.com>',
