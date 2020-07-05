@@ -9,8 +9,8 @@ exports.checkAdminLogin = catchAsync(async (req, res, next) => {
     const validKey = req.body.value == key;
 
     console.log("REQUEST GETTING IS ",req.body);
+    console.log("Sending ",validKey);
     
-
     return res.json({
         status:validKey?200:401,
         valid: validKey ? 200 : 401
