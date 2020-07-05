@@ -4,8 +4,6 @@ const APIFeatures = require("../utils/apiFeatures");
 const email = require('./../utils/email');
 const sms = require('../utils/smsService');
 
-const initiateMatch = require('../MatchAlgorithm/main');
-
 exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
 
@@ -16,31 +14,31 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getPatientStats = catchAsync(async (req , res , next)=>{
+exports.getPatientStats = catchAsync(async (req, res, next) => {
 
   const patients = await Patient.find({});
 
   res.status(200).json({
-    status:"Success",
-    length:patients.length
+    status: "Success",
+    length: patients.length
   })
 
 })
 
-exports.getMatches = catchAsync(async(req , res , next)=>{
+exports.getMatches = catchAsync(async (req, res, next) => {
 
   const patients = await Patient.find({})
 
   let matches = 0;
 
-  for(let i = 0 ;i<patients.length;i++){
-    if(patients[i]["matchedEarlier"] == true){
+  for (let i = 0; i < patients.length; i++) {
+    if (patients[i]["matchedEarlier"] == true) {
       matches = matches + 1;
     }
   }
 
   res.status(200).json({
-    status:"Success",
+    status: "Success",
     matches
   })
 
@@ -48,7 +46,7 @@ exports.getMatches = catchAsync(async(req , res , next)=>{
 
 
 exports.addPatient = catchAsync(async (req, res, next) => {
-  
+
   let patient = JSON.parse(JSON.stringify(req.body));
 
 
@@ -57,48 +55,70 @@ exports.addPatient = catchAsync(async (req, res, next) => {
     &&
     (patient.doctorPrescription == 1)
   )
-  try{
+  try {
 
     await Patient.create(patient);
 
-  }catch(e){
+  } catch (e) {
 
   }
 
-  if(!patient.healthy){
+  if (!patient.healthy) {
+
     sms.unhealthy_patient_greeting(patient)
-    .catch(e=>{
-      throw e;      
-    });
-  }
-  else{
-    sms.sendWelcomeMessage(patient).catch(e=>{
-      console.log(e);
-      
+      .catch(e => {
+        throw e;
+      });
+
+
+    email.sendEmailPlain({
+      email: patient.email,
+      subject: 'Welcome to PintNetwork',
+      message: `
+      Dear ${patient.email},<br>
+      <br>Thank you for registering with pintnetwork.com.<br>
+      <br>Unfortunately you did not meet the criteria for a plasma therapy recipient.<br>
+      <br>Thank you for your time and effort, we’d love to know if we can assist you in any further way.<br>
+      <br>Regards,
+      <br>Team PINT      
+      `,
+    }).catch(err => {
+      console.log(err);
+
     })
+
   }
+  else {
 
+    sms.sendWelcomeMessage(patient).catch(e => {
+      console.log(e);
 
+    })
 
+    email.sendEmailPlain({
+      email: patient.email,
+      subject: 'Welcome to PintNetwork',
+      message: `
+      <br>Dear ${patient.email},
+      <br>Thank you for registering with pintnetwork.com.<br>
+      <br>We are trying our best to match you with a donor within the next 24-48 hours.<br>
+      <br>Once we have made a successful match, you will receive a text message and email with the donor’s details and OTP.<br>
+      <br>We thank you for your time.<br>
+      <br>Regards,
+      <br>Team PINT
+      `,
+    }).catch(err => {
+      console.log("Error sending Welcome mail to Patient", err);
+    });
 
-  
-
-  email.sendEmailPlain({
-    email: patient.email,
-    subject: 'Welcome to PintNetwork',
-    message: `Hi ${patient.name}\nWelcome aboard to Pintnetwork.com community.`
-  }).catch(err => {
-    console.log("Error sending Welcome mail to Patient", err);
-
-  });
-
-
+  }
 
   res.status(200).json({
     status: 'Success',
     results: patient.length,
     data: patient,
   });
+
 });
 
 exports.deleteAllPatients = catchAsync(async (req, res, next) => {

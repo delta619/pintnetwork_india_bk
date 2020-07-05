@@ -19,7 +19,7 @@ exports.sendEmailPlain = async (options) => {
     from: 'Pint Network <admin@pintnetwork.com>',
     to: options.email,
     subject: options.subject,
-    text: options.message,
+    html: options.message,
     envelope: {
       from: 'Pint Network <admin@pintnetwork.com>',
       to: options.email

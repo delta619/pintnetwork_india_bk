@@ -2,12 +2,10 @@ const constants = require('../constants');
 
 const Donor = require("../models/donorModel");
 
-
 const catchAsync = require("../utils/catchAsync");
 const email = require('./../utils/email');
 
 const sms = require('../utils/smsService');
-
 
 exports.addDonor = catchAsync(async (req, res, next) => {
 
@@ -21,10 +19,9 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     (donor.days14over == 1)
     &&
     (donor.pregnant == 0)
-
+    &&
+    (donor.age >= 18 && donor.age <= 65)
   )
-
-  console.log("The donor is", donor.healthy ? "Healthy " : "Not Healthy");
 
   try {
 
@@ -41,29 +38,56 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   }
 
   if(!donor.healthy){
-    sms.unhealthy_patient_greeting(donor)
+    
+    sms.unhealthy_donor_greeting(donor)
     .catch(e=>{
       throw e;      
     });
+
+    email.sendEmailPlain({
+      email: donor.email,
+      subject: 'Welcome to PintNetwork',
+      message: `
+      Dear ${donor.email},<br>
+      <br>Thank you for registering with pintnetwork.com.<br>
+      <br>Unfortunately you did not meet the criteria for plasma donation.<br>
+      <br>Thank you for your time and effort, we’d love to know if we can assist you in any further way.<br>
+      <br>Regards,
+      <br>Team PINT
+      `,
+    }).catch(err => {
+        console.log(err);
+  
+      })
+
+
+
   }
   else{
+
     sms.sendWelcomeMessage(donor).catch(e=>{
       console.log(e);
     })
+    
+    email.sendEmailPlain({
+      email: donor.email,
+      subject: 'Welcome to PintNetwork',
+      message: `
+      <br>Dear ${donor.name},<br>
+      <br>Thank you for registering with pintnetwork.com.<br>
+      <br>We are trying our best to match you with a patient in need of plasma within the next 24-48 hours.<br>
+      <br>Once we have made a successful match, you will receive a text message and email with the patient’s OTP.<br>
+      <br>We thank you for your time.<br>
+      <br>Regards,
+      <br>Team PINT
+      `,
+    }).catch(err => {
+        console.log(err);
+  
+      })
   }
 
-  let notHealthyMsg = `\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
-
-  email.sendEmailPlain({
-    email: donor.email,
-    subject: 'Welcome to PintNetwork',
-    donor,
-    message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!donor.healthy ? notHealthyMsg : ''}`,
-  })
-    .catch(err => {
-      console.log(err);
-
-    })
+  
 
 
   res.status(200).json({
