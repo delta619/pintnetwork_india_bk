@@ -1,19 +1,24 @@
 const Donor = require("../models/donorModel")
 const Patient = require("../models/patientModel");
 const sendEmail = require('./../utils/email');
-const { match, isMatch } = require('../utils/matchPeople')
+const { inform, isMatch } = require('../utils/matchPeople');
+const e = require("express");
 
 module.exports = async () => {
 
+    
+
     const [donors, patients] = await Promise.all([
-        Donor.find({
+        await Donor.find({
             healthy: true,
             matchedEarlier: false,
         }),
-        Patient.find({
+        await Patient.find({
             matchedEarlier: false
         })
-    ])
+    ]).catch(e=>{
+        throw e;
+    })
 
     console.log(`Got ${donors.length} and ${patients.length} `);
 
@@ -39,8 +44,6 @@ module.exports = async () => {
         patients[i].matched = false;
     }
 
-    let loopTurn = 0;
-
     for (let p = 0; p < patients.length; p++) {
         for (let d = 0; d < donors.length; d++) {
      
@@ -53,9 +56,6 @@ module.exports = async () => {
 
             if (isMatch(donors[d], patients[p])) {
 
-                console.log(`key was ${donors[d].matched} and ${patients[p].matched}`);
-
-
                 matches++;
 
                 donors[d].matched = true;
@@ -65,12 +65,12 @@ module.exports = async () => {
 
                 try {
                     await Promise.all([
-                        Donor.findByIdAndUpdate(donors[d]._id, {
+                         Donor.findByIdAndUpdate(donors[d]._id, {
                             matchedEarlier: true,
                             matchedTo: patients[p]._id
                         })
                         ,
-                        Patient.findByIdAndUpdate(patients[p]._id, {
+                         Patient.findByIdAndUpdate(patients[p]._id, {
                             matchedEarlier: true,
                             matchedTo: donors[d]._id
                         }),
@@ -78,21 +78,25 @@ module.exports = async () => {
 
                 } catch (err) {
 
-                    donors[d].matched = false;
-                    patients[p].matched = false;
+                    console.log(err);
 
                     console.log("The Match couldnt happen at DB, so resetting their local match. ", err);
 
+                    throw e;
+
                 }
+                    try{
+                        await inform(donors[d], patients[p]);
 
-
-
-                match(donors[d], patients[p]);
+                    }catch(e){
+                        throw e;
+                    }
+                
             }
         }
 
     }
-
+    
     console.log(`Total matches `, matches)
 
 

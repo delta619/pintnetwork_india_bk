@@ -1,9 +1,9 @@
 const axios = require('axios');
 
-exports.sendWelcomeMessage = options =>{
+exports.sendWelcomeMessage = async (options) =>{
      
 
-     axios({
+     await axios({
           method:'post',
           url:`http://2factor.in/API/V1/${process.env.SMS_API_KEY}/ADDON_SERVICES/SEND/TSMS`,
           data:{
@@ -13,10 +13,9 @@ exports.sendWelcomeMessage = options =>{
                VAR1:options.name
           }
      }).then((res)=>{
-          // console.log("res is ",res);
-          
+          return true
      },(err)=>{
-          // console.log("error is ",err); 
+          throw Error(err)
      })
 }
 

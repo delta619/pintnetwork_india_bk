@@ -11,4 +11,8 @@ router
 .post(donorController.addDonor)
 .delete(donorController.deleteAllDonors)
 
+router
+.route('/stat')
+.get(donorController.getDonorStats)
+
 module.exports = router;

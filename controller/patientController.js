@@ -16,14 +16,49 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getPatientStats = catchAsync(async (req , res , next)=>{
+
+  const patients = await Patient.find({});
+
+  res.status(200).json({
+    status:"Success",
+    length:patients.length
+  })
+
+})
+
+exports.getMatches = catchAsync(async(req , res , next)=>{
+
+  const patients = await Patient.find({})
+
+  let matches = 0;
+
+  for(let i = 0 ;i<patients.length;i++){
+    if(patients[i]["matchedEarlier"] == true){
+      matches = matches + 1;
+    }
+  }
+
+  res.status(200).json({
+    status:"Success",
+    matches
+  })
+
+})
+
 
 exports.addPatient = catchAsync(async (req, res, next) => {
+  
+  
   const patient = await Patient.create(req.body);
 
 
   sms.sendWelcomeMessage({
     name: patient.name,
     contact: patient.contact
+  }).catch(e=>{
+    console.log(e);
+    
   })
 
   
@@ -36,13 +71,6 @@ exports.addPatient = catchAsync(async (req, res, next) => {
     console.log("Error sending Welcome mail to Patient", err);
 
   });
-
-
-  // Initiate Match
-
-
-  initiateMatch();
-
 
 
 

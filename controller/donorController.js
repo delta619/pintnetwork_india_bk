@@ -8,8 +8,6 @@ const email = require('./../utils/email');
 
 const sms = require('../utils/smsService');
 
-const initiateMatch = require('../MatchAlgorithm/main');
-
 exports.getAllDonors = catchAsync(async (req, res, next) => {
   const donors = await Donor.find({});
 
@@ -19,6 +17,17 @@ exports.getAllDonors = catchAsync(async (req, res, next) => {
     data: donors,
   });
 });
+
+exports.getDonorStats = catchAsync(async (req , res , next)=>{
+
+  const donors = await Donor.find({});
+
+  res.status(200).json({
+    status:"Success",
+    length:donors.length
+  })
+
+})
 
 
 exports.addDonor = catchAsync(async (req, res, next) => {
@@ -42,15 +51,27 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   console.log("The donor is", donor.healthy ? "Healthy " : "Not Healthy");
 
 
-  await Donor.create(donor)
-  .catch(err=>{
-    console.log(err);
+try{
+  
+  await Donor.create(donor);
+
+}catch(e){
+  console.log(e);
+ 
+  res.status(500).json({
+    status:"failed creating donor",
+    donor
   })
 
+  
+}
 
   sms.sendWelcomeMessage({
     name: donor.name,
     contact: donor.contact
+  }).catch(err=>{
+    console.log(err);
+    
   })
 
 
@@ -62,10 +83,11 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     donor,
     message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!donor.healthy ? notHealthyMsg : ''}`,
   })
+  .catch(err=>{
+    console.log(err);
+    
+  })
 
-  // WILDCASE BEFORE PRODUCTION
-
-  initiateMatch();
 
   res.status(200).json({
     status: 'Success',

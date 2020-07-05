@@ -1,3 +1,5 @@
+const constants = require('../constants')
+
 const Donor = require("../models/donorModel");
 const Patient = require("../models/patientModel");
 
@@ -6,9 +8,9 @@ const sms = require('./smsService');
 
 const AppError = require("./AppError");
 const pdf = require('../utils/pdfModule/pdfGenerator')
-const constants = require('../constants')
-const fs = require('fs')
 
+const fs = require('fs')
+const path = require('path')
 
 
 
@@ -52,7 +54,7 @@ let cityCheck = (currentDonor, currentPatient) => {
     if (currentDonor.city == currentPatient.city) {
         return true;
     }
-    console.log(`City Check was false for ${currentDonor.contact} & ${currentPatient.contact}`);
+    console.log(`City Check was false for ${currentDonor._id} & ${currentPatient._id}`);
     return false;
 }
 
@@ -65,21 +67,24 @@ exports.isMatch = (d, p) => {
     }
 }
 
-exports.match = async (currentDonor, currentPatient) => {
+exports.inform = async (currentDonor, currentPatient) => {
 
-    let session_otp = 1000 + Math.round((Math.random()*9000));
+    let session_otp = 1000 + Math.round((Math.random() * 9000));
 
     currentDonor.otp = session_otp;
     currentPatient.otp = session_otp;
 
     // Preparing attachment for donor
 
+
+    console.log(`step 1 creating donors pdf`);
     try {
         await pdf.renderDonorEmail(currentDonor)
 
     } catch (e) {
-        console.log("rendering donor pdf error ",e);
+        throw e
     }
+
 
     Promise.all([
 
@@ -101,7 +106,7 @@ exports.match = async (currentDonor, currentPatient) => {
                 P.S : Do let us know if the match turned out to be successful and if we can assist you in any further way.\n\n Pintnetwork.com ©`,
             attachments: [{
                 filename: `${currentDonor.name} Donor Form.pdf`,
-                path: `${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor.contact}.pdf`
+                path: `${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor._id}.pdf`
             }],
         })
             .then(() => {
@@ -127,49 +132,49 @@ exports.match = async (currentDonor, currentPatient) => {
             P.S: Do let us know if the match turned out to be successful and if you’d be interested in donating as well post-recovery.\n\n Pintnetwork.com ©`
         }).then(() => {
         })
-        .catch(e => {
-            console.log("Mail to Patient was unsuccessful ", e.message);
-        })
+            .catch(e => {
+                console.log("Mail to Patient was unsuccessful ", e.message);
+            })
         ,
         sms.sendMatchResponseDonor({
-            
-            to:currentDonor.contact,
-            var1:currentDonor.name,
-            var2:session_otp
 
-        }).then(()=>{
+            to: currentDonor.contact,
+            var1: currentDonor.name,
+            var2: session_otp
 
-        }).catch(err=>{
+        }).then(() => {
+
+        }).catch(err => {
             console.log(err);
         })
 
         ,
 
         sms.sendMatchResponsePatient({
-            to:currentPatient.contact,
-            var1:currentPatient.name,
-            var2:currentDonor.sex=="M"?"his":"her",
-            var3:currentDonor.name,
-            var4:currentDonor.contact,
-            var5:currentDonor.email,
-            var6:session_otp
+            to: currentPatient.contact,
+            var1: currentPatient.name,
+            var2: currentDonor.sex == "M" ? "his" : "her",
+            var3: currentDonor.name,
+            var4: currentDonor.contact,
+            var5: currentDonor.email,
+            var6: session_otp
 
-        }).then(()=>{
+        }).then(() => {
 
-        }).catch(err=>{
+
+
+        }).catch(err => {
             console.log(err);
-            
+
         })
 
     ])
-    .then(() => {
-        fs.unlink(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor.contact}.pdf`,(err)=>{
-            if(err){
-                console.log(`file delete error`,err);
-            }
+        .then(() => {
+            fs.unlink(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${currentDonor._id}.pdf`, (err) => {
+                if (err) {
+                    throw err
+                }
+            })
         })
-    })
-    .catch(e => {
-        console.log("Mail to Patient was unsuccessful ", e);
-    })
+
 }

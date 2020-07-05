@@ -10,5 +10,13 @@ router
 .delete(patientController.deleteAllPatients)
 
 
+router
+.route('/stat')
+.get(patientController.getPatientStats)
+
+router
+.route('/matches')
+.get(patientController.getMatches)
+
 
 module.exports = router;

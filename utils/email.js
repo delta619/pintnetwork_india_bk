@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-exports.sendEmailPlain = async options => {
+exports.sendEmailPlain = async (options) => {
 
   const mailOptions = {
     from: 'Pint Network <admin@pintnetwork.com>',
@@ -25,7 +25,8 @@ exports.sendEmailPlain = async options => {
       to: options.email
     }
   }
-  return transporter.sendMail(mailOptions);
+  // return transporter.sendMail(mailOptions);
+  return true;
 }
 
 
@@ -42,7 +43,11 @@ exports.sendEmailWithAttachments = async options => {
       to: options.email
     }
   }
+  try{
+    await  transporter.sendMail(mailOptions);
+  }catch(e){
+    throw e
+  }
 
-  await transporter.sendMail(mailOptions);
 }
 

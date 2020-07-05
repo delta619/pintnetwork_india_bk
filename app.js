@@ -57,7 +57,7 @@ app.use(express.urlencoded({extended:true}))
 
 app.use('/api/donor',donorRoute);
 app.use('/api/patient',patietRoute)
-// app.use('/api/admin',adminRoute)
+app.use('/api/admin',adminRoute)
 
 
 app.all('*',(req , res , next)=>{

@@ -1,4 +1,5 @@
 const PDFDocument = require('pdfkit');
+const constants = require('../../constants');
 const fs = require('fs');
 const path = require('path');
 
@@ -57,8 +58,8 @@ exports.renderDonorEmail = async(donor)=>{
     const doc = new PDFDocument();
 
     try {
-      let donorBio = path.join(__dirname, ".." , ".." , "userdata" , "emails" , `${donor.contact}.pdf`)
-      doc.pipe(fs.createWriteStream(donorBio));
+
+      doc.pipe(fs.createWriteStream(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${donor._id}.pdf`));
 
 
     
@@ -91,8 +92,8 @@ exports.renderDonorEmail = async(donor)=>{
 
        
     doc.end();
-  } catch (error) {
-    console.log("error while rendering pdf",error);      
+  } catch (e) {
+    throw e
   }
 
 }
