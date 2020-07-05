@@ -75,7 +75,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
       message: `
       <br>Dear ${donor.name},<br>
       <br>Thank you for registering with pintnetwork.com.<br>
-      <br>We are trying our best to match you with a patient in need of plasma within the next 24-48 hours.<br>
+      <br>We are trying our best to find you a patient in need of plasma within the next 24-48 hours.<br>
       <br>Once we have made a successful match, you will receive a text message and email with the patient’s OTP.<br>
       <br>We thank you for your time.<br>
       <br>Regards,
