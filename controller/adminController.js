@@ -8,7 +8,7 @@ exports.checkAdminLogin = catchAsync(async (req, res, next) => {
 
     const validKey = req.body.value == key;
 
-    return res.status(valid ? 200 : 500).json({
+    return res.status(validKey ? 200 : 500).json({
         valid: validKey ? 200 : 500
     })
 
