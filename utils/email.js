@@ -25,7 +25,7 @@ exports.sendEmailPlain = async (options) => {
       to: options.email
     }
   }
-  return transporter.sendMail(mailOptions);
+  // return transporter.sendMail(mailOptions);
 }
 
 
