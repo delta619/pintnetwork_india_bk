@@ -65,7 +65,8 @@ module.exports = async () => {
 
                 try {
                     await Promise.all([
-                         Donor.findByIdAndUpdate(donors[d]._id, {
+                         
+                        Donor.findByIdAndUpdate(donors[d]._id, {
                             matchedEarlier: true,
                             matchedTo: patients[p]._id
                         })
