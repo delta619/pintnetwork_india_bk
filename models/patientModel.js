@@ -33,14 +33,16 @@ const patientSchema = new mongoose.Schema({
     doctorPrescription:{
         type:Number,
     },
-    
+    labDiagnosed:{
+        type:Number
+    },
     registeredAt: {
         type: Date, 
         default: Date.now()
     },
     healthy:{
         type:Boolean,
-        default: false
+        default: true
     },
     matchedEarlier:{
         type:Boolean,

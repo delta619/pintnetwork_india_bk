@@ -49,17 +49,37 @@ exports.getMatches = catchAsync(async(req , res , next)=>{
 
 exports.addPatient = catchAsync(async (req, res, next) => {
   
-  
-  const patient = await Patient.create(req.body);
+  let patient = JSON.parse(JSON.stringify(req.body));
 
 
-  sms.sendWelcomeMessage({
-    name: patient.name,
-    contact: patient.contact
-  }).catch(e=>{
-    console.log(e);
-    
-  })
+  patient.healthy = (
+    (patient.labDiagnosed == 1)
+    &&
+    (patient.doctorPrescription == 1)
+  )
+  try{
+
+    await Patient.create(patient);
+
+  }catch(e){
+
+  }
+
+  if(!patient.healthy){
+    sms.unhealthy_patient_greeting(patient)
+    .catch(e=>{
+      throw e;      
+    });
+  }
+  else{
+    sms.sendWelcomeMessage(patient).catch(e=>{
+      console.log(e);
+      
+    })
+  }
+
+
+
 
   
 

@@ -8,34 +8,10 @@ const email = require('./../utils/email');
 
 const sms = require('../utils/smsService');
 
-exports.getAllDonors = catchAsync(async (req, res, next) => {
-  const donors = await Donor.find({});
-
-  res.status(200).json({
-    status: 'Success',
-    results: donors.length,
-    data: donors,
-  });
-});
-
-exports.getDonorStats = catchAsync(async (req , res , next)=>{
-
-  const donors = await Donor.find({});
-
-  res.status(200).json({
-    status:"Success",
-    length:donors.length
-  })
-
-})
-
 
 exports.addDonor = catchAsync(async (req, res, next) => {
 
-
-
   let donor = JSON.parse(JSON.stringify(req.body));
-
 
   donor.healthy = (
     (donor.hiv != 1)
@@ -45,35 +21,36 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     (donor.days14over == 1)
     &&
     (donor.pregnant == 0)
-  )
 
+  )
 
   console.log("The donor is", donor.healthy ? "Healthy " : "Not Healthy");
 
+  try {
 
-try{
-  
-  await Donor.create(donor);
+    await Donor.create(donor);
 
-}catch(e){
-  console.log(e);
- 
-  res.status(500).json({
-    status:"failed creating donor",
-    donor
-  })
+  } catch (e) {
+    console.log(e);
 
-  
-}
+    res.status(500).json({
+      status: "failed creating donor",
+      donor
+    })
 
-  sms.sendWelcomeMessage({
-    name: donor.name,
-    contact: donor.contact
-  }).catch(err=>{
-    console.log(err);
-    
-  })
+  }
 
+  if(!donor.healthy){
+    sms.unhealthy_patient_greeting(donor)
+    .catch(e=>{
+      throw e;      
+    });
+  }
+  else{
+    sms.sendWelcomeMessage(donor).catch(e=>{
+      console.log(e);
+    })
+  }
 
   let notHealthyMsg = `\nUnfortunately you did not meet the criteria for plasma donation.\n Feel free to reach out to us for any further queries.`
 
@@ -83,10 +60,10 @@ try{
     donor,
     message: `Hi ${donor.name}\nWelcome aboard to Pintnetwork.com community. ${!donor.healthy ? notHealthyMsg : ''}`,
   })
-  .catch(err=>{
-    console.log(err);
-    
-  })
+    .catch(err => {
+      console.log(err);
+
+    })
 
 
   res.status(200).json({
@@ -106,6 +83,26 @@ exports.deleteAllDonors = catchAsync(async (req, res, next) => {
 });
 
 
+exports.getAllDonors = catchAsync(async (req, res, next) => {
+  const donors = await Donor.find({});
+
+  res.status(200).json({
+    status: 'Success',
+    results: donors.length,
+    data: donors,
+  });
+});
+
+exports.getDonorStats = catchAsync(async (req, res, next) => {
+
+  const donors = await Donor.find({});
+
+  res.status(200).json({
+    status: "Success",
+    length: donors.length
+  })
+
+})
 
 
 

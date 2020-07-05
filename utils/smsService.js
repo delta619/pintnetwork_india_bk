@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-exports.sendWelcomeMessage = async (options) =>{
+exports.sendWelcomeMessage = async (person) =>{
      
 
      await axios({
@@ -8,9 +8,47 @@ exports.sendWelcomeMessage = async (options) =>{
           url:`http://2factor.in/API/V1/${process.env.SMS_API_KEY}/ADDON_SERVICES/SEND/TSMS`,
           data:{
                From: 'PINTNW',
-               To:options.contact,
+               To:person.contact,
                TemplateName:'greeting_v2',
-               VAR1:options.name
+               VAR1:person.name
+          }
+     }).then((res)=>{
+          return true
+     },(err)=>{
+          throw Error(err)
+     })
+}
+
+exports.unhealthy_donor_greeting = async (donor) =>{
+     
+
+     await axios({
+          method:'post',
+          url:`http://2factor.in/API/V1/${process.env.SMS_API_KEY}/ADDON_SERVICES/SEND/TSMS`,
+          data:{
+               From: 'PINTNW',
+               To:donor.contact,
+               TemplateName:'unhealthy_donor_greeting',
+               VAR1:donor.name
+          }
+     }).then((res)=>{
+          return true
+     },(err)=>{
+          throw Error(err)
+     })
+}
+
+exports.unhealthy_patient_greeting = async (patient) =>{
+     
+
+     await axios({
+          method:'post',
+          url:`http://2factor.in/API/V1/${process.env.SMS_API_KEY}/ADDON_SERVICES/SEND/TSMS`,
+          data:{
+               From: 'PINTNW',
+               To:patient.contact,
+               TemplateName:'unhealthy_patient_greeting',
+               VAR1:patient.name
           }
      }).then((res)=>{
           return true

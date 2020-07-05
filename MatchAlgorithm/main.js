@@ -14,6 +14,7 @@ module.exports = async () => {
             matchedEarlier: false,
         }),
         await Patient.find({
+            healthy: true,
             matchedEarlier: false
         })
     ]).catch(e=>{

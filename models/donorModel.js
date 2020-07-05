@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { schema } = require("./patientModel");
 
 
 const donorSchema = new mongoose.Schema({
@@ -34,6 +33,10 @@ const donorSchema = new mongoose.Schema({
     city:{
         type:String
     },
+    location:{
+        type:String,
+        default:"Location not provided"
+    },
     pregnant:{
         type:Number
     },
@@ -41,6 +44,12 @@ const donorSchema = new mongoose.Schema({
         type:Number
     },
     bp:{
+        type:Number
+    },
+    diabities:{
+        type:Number
+    },
+    onMedication:{
         type:Number
     },
     anemia:{
@@ -66,6 +75,9 @@ const donorSchema = new mongoose.Schema({
     },
     last_symptom_discharge_date:{
         type:Date
+    },
+    hadFollowUp:{
+        type:Number
     },
     dischargeReport:{
         type:Number
