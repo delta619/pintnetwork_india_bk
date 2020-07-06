@@ -23,14 +23,19 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     (donor.age >= 18 && donor.age <= 65)
   )
 
+  try {
 
+    await Donor.create(donor);
 
-    const result =  await Donor.create(donor);
-    
-    if(!result){
-      return ;
-    }
+  } catch (e) {
+    console.log(e);
 
+    res.status(500).json({
+      status: "failed creating donor",
+      donor
+    })
+
+  }
 
   if(!donor.healthy){
     
