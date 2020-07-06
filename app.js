@@ -75,10 +75,9 @@ app.get('/api/addHit',async(req , res , next)=>{
     
     await Hit.create({
         hit:1,
-        // data:JSON.stringify(req)
+        data: JSON.stringify(req.headers),
     })
 
-res.status(200).send(true);
 
 })
 

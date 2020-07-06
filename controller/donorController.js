@@ -1,6 +1,7 @@
 const constants = require('../constants');
 
 const Donor = require("../models/donorModel");
+const Hit = require('../models/hitModel');
 
 const catchAsync = require("../utils/catchAsync");
 const email = require('./../utils/email');
@@ -24,7 +25,17 @@ exports.addDonor = catchAsync(async (req, res, next) => {
   )
 
 
+ 
+
     await Donor.create(donor);
+
+
+    console.log("Req is ",req);
+    
+    await Hit.create({
+        hit:1,
+        data: JSON.stringify(req.headers),
+    })
 
 
 

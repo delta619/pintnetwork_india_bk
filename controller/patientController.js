@@ -4,8 +4,21 @@ const APIFeatures = require("../utils/apiFeatures");
 const email = require('./../utils/email');
 const sms = require('../utils/smsService');
 
+const Hit = require('../models/hitModel');
+
+
 exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
+
+
+  console.log("Req is ",req);
+    
+  await Hit.create({
+      hit:1,
+      data: JSON.stringify(req.headers),
+  })
+
+
 
   res.status(200).json({
     status: 'Success',
