@@ -73,9 +73,9 @@ app.use(express.urlencoded({extended:true}))
 app.get('/addHit',(req , res , next)=>{
     console.log("Hit Created");
     
-Hit.create({
+await Hit.create({
     hit:1,
-    // data:JSON.stringify(req)
+    data:JSON.stringify(req)
 })
 res.status(200).send(true);
 })
