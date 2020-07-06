@@ -70,7 +70,7 @@ app.use(express.urlencoded({extended:true}))
 // }, 30000);
 
 
-app.get('/addHit',async(req , res , next)=>{
+app.get('/api/addHit',async(req , res , next)=>{
     console.log("Req is ",req);
     
     await Hit.create({
