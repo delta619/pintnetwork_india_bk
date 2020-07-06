@@ -25,8 +25,11 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
 
 
-     await Donor.create(donor);
-
+    const result =  await Donor.create(donor);
+    
+    if(!result){
+      return ;
+    }
 
 
   if(!donor.healthy){

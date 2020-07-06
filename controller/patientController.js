@@ -56,9 +56,13 @@ exports.addPatient = catchAsync(async (req, res, next) => {
     (patient.doctorPrescription == 1)
   )
 
-     await Patient.create(patient);
 
 
+     const result = await Patient.create(patient);
+
+    if(!result){
+        return ;
+      }
 
 
   if (!patient.healthy) {
