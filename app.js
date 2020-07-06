@@ -6,6 +6,7 @@ const donorRoute = require('./routes/donorRoute');
 const patietRoute = require('./routes/patientRoute');
 const adminRoute = require('./routes/adminRoute');
 
+const initiateMatch = require('./MatchAlgorithm/main')
 
 const globalErrorController = require("./controller/errorController");
 const morgan = require("morgan");
@@ -53,6 +54,18 @@ app.use(hpp({
 }));
 
 app.use(express.urlencoded({extended:true}))
+
+
+// setInterval(() => {
+//     initiateMatch()
+//         .then((data) => {
+//             console.log("The Matching Successfully completed at ",new Date());
+            
+//         })
+//         .catch(e => {
+//             console.log("The Matching Terminated due to error at ",new Date());
+//         })
+// }, 30000);
 
 
 app.use('/api/donor',donorRoute);

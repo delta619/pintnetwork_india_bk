@@ -80,7 +80,6 @@ module.exports = async () => {
 
                 } catch (err) {
 
-                    console.log(err);
 
                     console.log("The Match couldnt happen at DB, so resetting their local match. ", err);
 
@@ -91,6 +90,8 @@ module.exports = async () => {
                         await inform(donors[d], patients[p]);
 
                     }catch(e){
+                        donors[d].matched = false;
+                        patients[p].matched = false;
                         throw e;
                     }
                 

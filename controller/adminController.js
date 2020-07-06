@@ -26,7 +26,6 @@ exports.matchAllNow = async (req, res, next) => {
                 status: "Success",
                 data
             })
-
         })
         .catch(e => {
             res.status(500).json({

@@ -120,7 +120,7 @@ exports.inform = async (currentDonor, currentPatient) => {
         email.sendEmailPlain({
             email: currentPatient.email,
             subject: 'PintNetwork - Donor Found',
-            message: `Dear __________,<br>
+            message: `Dear ${currentPatient.name},<br>
             <br>Great news! We’ve found you a donor.<br>
             <br>Provided below are the contact details of your nearest donor:<br>
             <br>Name:${currentDonor.name}

@@ -23,19 +23,11 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     (donor.age >= 18 && donor.age <= 65)
   )
 
-  try {
 
-    await Donor.create(donor);
 
-  } catch (e) {
-    console.log(e);
+     await Donor.create(donor);
 
-    res.status(500).json({
-      status: "failed creating donor",
-      donor
-    })
 
-  }
 
   if(!donor.healthy){
     
@@ -48,7 +40,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
       email: donor.email,
       subject: 'Welcome to PintNetwork',
       message: `
-      Dear ${donor.email},<br>
+      Dear ${donor.name},<br>
       <br>Thank you for registering with pintnetwork.com.<br>
       <br>Unfortunately you did not meet the criteria for plasma donation.<br>
       <br>Thank you for your time and effort, we’d love to know if we can assist you in any further way.<br>

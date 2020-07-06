@@ -16,9 +16,11 @@ const patientSchema = new mongoose.Schema({
     },
     contact:{
         type:String,
+        unique:true
     },
     email:{
         type:String,
+        unique:true
     },
     blood:{
         type:String,

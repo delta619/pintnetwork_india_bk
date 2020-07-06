@@ -55,13 +55,11 @@ exports.addPatient = catchAsync(async (req, res, next) => {
     &&
     (patient.doctorPrescription == 1)
   )
-  try {
 
-    await Patient.create(patient);
+     await Patient.create(patient);
 
-  } catch (e) {
 
-  }
+
 
   if (!patient.healthy) {
 

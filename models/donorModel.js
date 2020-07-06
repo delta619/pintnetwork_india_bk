@@ -16,11 +16,11 @@ const donorSchema = new mongoose.Schema({
     },
     contact:{
         type:String,
-        trim:true
+        unique:true
     },
     email:{
         type:String,
-
+        unique:true
     },
     weight:{
         type:Number,
