@@ -11,13 +11,15 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
 
 
-  console.log("Req is ",req);
+  try {
+    await Hit.create({
+        hit:1,
+        data: JSON.stringify(req.headers),
+      })
+} catch (error) {
+    console.log(error);
     
-  await Hit.create({
-      hit:1,
-      data: JSON.stringify(req.headers),
-  })
-
+}
 
 
   res.status(200).json({

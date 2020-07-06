@@ -29,13 +29,16 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
     await Donor.create(donor);
 
-
-    console.log("Req is ",req);
     
-    await Hit.create({
-        hit:1,
-        data: JSON.stringify(req.headers),
-    })
+    try {
+      await Hit.create({
+          hit:1,
+          data: JSON.stringify(req.headers),
+        })
+    } catch (error) {
+        console.log(error);
+        
+    }
 
 
 

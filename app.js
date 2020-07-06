@@ -71,13 +71,18 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.get('/api/addHit',async(req , res , next)=>{
-    console.log("Req is ",req);
     
-    await Hit.create({
-        hit:1,
-        data: req.headers,
-    })
+    try {
+        await Hit.create({
+            hit:1,
+            data: JSON.stringify(req.headers),
+        })
+    } catch (error) {
+        console.log(error);
+        
+    }
 
+    res.status(200).json(true)
 
 })
 
