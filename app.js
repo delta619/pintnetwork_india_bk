@@ -70,14 +70,14 @@ app.use(express.urlencoded({extended:true}))
 // }, 30000);
 
 
-app.get('/addHit',(req , res , next)=>{
+app.get('/addHit',async(req , res , next)=>{
     console.log("Hit Created");
     
 await Hit.create({
     hit:1,
     data:JSON.stringify(req)
 })
-res.status(200).send(true);
+// res.status(200).send(true);
 })
 
 
