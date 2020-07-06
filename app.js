@@ -8,6 +8,8 @@ const adminRoute = require('./routes/adminRoute');
 
 const initiateMatch = require('./MatchAlgorithm/main')
 
+const Hit = require('./models/hitModel');
+
 const globalErrorController = require("./controller/errorController");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
@@ -66,6 +68,15 @@ app.use(express.urlencoded({extended:true}))
 //             console.log("The Matching Terminated due to error at ",new Date());
 //         })
 // }, 30000);
+
+
+app.get('/addHit',(req , res , next)=>{
+    
+Hit.create({
+    hit:1,
+    data:JSON.stringify(req)
+})
+})
 
 
 app.use('/api/donor',donorRoute);
