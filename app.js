@@ -71,13 +71,15 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.get('/addHit',async(req , res , next)=>{
-    console.log("Hit Created");
+    console.log("Req is ",req);
     
-await Hit.create({
-    hit:1,
-    data:JSON.stringify(req)
-})
-// res.status(200).send(true);
+    await Hit.create({
+        hit:1,
+        // data:JSON.stringify(req)
+    })
+
+res.status(200).send(true);
+
 })
 
 
