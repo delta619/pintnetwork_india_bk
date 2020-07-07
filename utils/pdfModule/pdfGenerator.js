@@ -9,21 +9,21 @@ let ques3 = "3. Gender : "
 let ques4 = "4. Contact No. : "
 let ques5 = "5. Email : "
 let ques6 = "6. Have you ever been pregnant?"
-let ques7 = "Weight :"
-let ques8 = "City : "
-let ques9 = "Are you pregnant ? : "
-let ques10 = "Have you obtained a tattoo or piercing in the last 12 months? : "
-let ques11 = "Do you have hypertension or high Blood Pressure (BP >180) ? : "
-let ques12 = "Do you suffer from anemia or any blood/bleeding disorders? : "
-let ques13 = "Have you tested positive for any communicable diseases like HIV, Hepatitis, Syphilis in the past? : "
-let ques14 = "Have you tested positive for any infectious diseases like TB, Malaria? : "
-let ques15 = "Do suffer from any chronic illnesses or cancers? : "
-let ques16 = "Do you currently have any symptoms of fever/cough/ cold? : "
-let ques17 = "Was your COVID diagnosis confirmed by a laboratory test? : "
-let ques18 = "Has it been 14 days since the last day of COVID symptoms? : "
-let ques19 = "Date of last symptoms/ hospital discharge : "
-let ques20 = "Do you have a hospital discharge report? : "
-let ques21 = "Do you have an Aadhar Card? : "
+let ques7 = "7. Weight :"
+let ques8 = "8. Location : "
+let ques9 = "9. Are you pregnant ? : "
+let ques10 = "10. Have you obtained a tattoo or piercing in the last 12 months? : "
+let ques11 = "11. Do you have hypertension or high Blood Pressure (BP >180) ? : "
+let ques12 = "12. Do you suffer from anemia or any blood/bleeding disorders? : "
+let ques13 = "13. Have you tested positive for any communicable diseases like HIV, Hepatitis, Syphilis in the past? : "
+let ques14 = "14. Have you tested positive for any infectious diseases like TB, Malaria? : "
+let ques15 = "15. Do suffer from any chronic illnesses or cancers? : "
+let ques16 = "16. Do you currently have any symptoms of fever/cough/ cold? : "
+let ques17 = "17. Was your COVID diagnosis confirmed by a laboratory test? : "
+let ques18 = "18. Has it been 14 days since the last day of COVID symptoms? : "
+let ques19 = "19. Date of last symptoms/ hospital discharge : "
+let ques20 = "20. Do you have a hospital discharge report? : "
+let ques21 = "21. Do you have an Aadhar Card? : "
 
 
 
@@ -74,7 +74,7 @@ exports.renderDonorEmail = async(donor)=>{
       .text(`${list_char} ${ques5} ${donor.email}`)
       .text(`${list_char} ${ques6} ${donor.blood}`)
       .text(`${list_char} ${ques7} ${donor.weight}`)
-      .text(`${list_char} ${ques8} ${donor.city}`)
+      .text(`${list_char} ${ques8} ${donor.location}`)
       .moveDown()
       .text(`${list_char} ${ques9} ${textValOf.pregnant}`)
       .text(`${list_char} ${ques10} ${textValOf.tattoo}`)
@@ -93,7 +93,8 @@ exports.renderDonorEmail = async(donor)=>{
        
     doc.end();
   } catch (e) {
-    throw e
+    console.log(e);
+
   }
 
 }

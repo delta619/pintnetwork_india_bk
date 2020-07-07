@@ -6,8 +6,6 @@ const donorRoute = require('./routes/donorRoute');
 const patietRoute = require('./routes/patientRoute');
 const adminRoute = require('./routes/adminRoute');
 
-const initiateMatch = require('./MatchAlgorithm/main')
-
 const Hit = require('./models/hitModel');
 
 const globalErrorController = require("./controller/errorController");
@@ -20,8 +18,7 @@ const hpp = require("hpp");
 const cors = require('cors');
 // GLOBAL
 
-app.use(morgan("dev"));
-
+app.use(morgan('dev'))
 // protect
 app.use(helmet());
 
@@ -47,7 +44,10 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // setting global cors
-app.use(cors());
+
+if(process.env.NODE_ENV == "development"){
+    app.use(cors());
+}
 
 // prevent parameter pollution
 
@@ -58,31 +58,23 @@ app.use(hpp({
 app.use(express.urlencoded({extended:true}))
 
 
-// setInterval(() => {
-//     initiateMatch()
-//         .then((data) => {
-//             console.log("The Matching Successfully completed at ",new Date());
-            
-//         })
-//         .catch(e => {
-//             console.log("The Matching Terminated due to error at ",new Date());
-//         })
-// }, 30000);
 
-
-app.get('/api/addHit',async(req , res , next)=>{
+app.get('/api/addHit',async(req , res )=>{
     
-    try {
-        await Hit.create({
-            hit:1,
-            data: JSON.stringify(req.headers),
-        })
-    } catch (error) {
-        console.log(error);
-        
+    if(process.env.NODE_ENV == "production"){
+        try {
+            await Hit.create({
+                hit:1,
+                data: JSON.stringify(req.headers),
+            })
+        } catch (error) {
+            console.log(error); 
+        }
+    
     }
-
-    res.status(200).json(true)
+    res.json({
+        status:200
+    })
 
 })
 
@@ -107,4 +99,9 @@ app.all('*',(req , res , next)=>{
 app.use(globalErrorController)
 
 exports.Server = app;
+
+
+
+
+
 

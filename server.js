@@ -5,21 +5,25 @@ const {Server} = require("./app");
 
 console.log(`#${process.env.NODE_ENV}# mode is on`);
 
-const localdb = process.env.DATABASE_LOCAL;
-const atlasdb = process.env.DATABASE.replace(
-    "<PASSWORD>",
-    process.env.DATABASE_PASSWORD
-)
 
-mongoose.connect(atlasdb,{
+if(process.env.NODE_ENV == 'production'){
+     [db , dbServerName] = [process.env.DATABASE.replace("<PASSWORD>",process.env.DATABASE_PASSWORD),"Production Server"];
+
+}else{
+     [db , dbServerName] = [process.env.DATABASE_LOCAL,"Local"];
+
+}
+
+
+mongoose.connect(db,{
     useNewUrlParser:true,
     useCreateIndex:true,
     useFindAndModify:false,
     useUnifiedTopology:true
 }).then(con=>{
-    console.log("MongoDB connected");
+    console.log(`MongoDB connected at ${dbServerName}`);
 }).catch(err=>{
-    console.log(err);
+    throw err;
 })
 
 

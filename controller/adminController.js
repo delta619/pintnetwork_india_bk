@@ -1,36 +1,77 @@
-const catchAsync = require('../utils/catchAsync');
-const initiateMatch = require('../MatchAlgorithm/main');
+const catchAsync = require('../utils/catchAsync'); 
+const config = require('../config/config');
+const Donor = require("../models/donorModel");
+const Patient = require("../models/patientModel");
+const matchController = require('./matchController');
 
-const key = "NEKAAN050720";
+exports.checkAdminLogin =catchAsync( async (req, res, next) => {
+
+    const validKey = (req.body.token == config.token_backend);
 
 
-exports.checkAdminLogin = catchAsync(async (req, res, next) => {
-
-    const validKey = (req.body.value == key);
-
-    console.log("REQUEST GETTING IS ",req.body);
-    console.log("Sending ",validKey);
-    
-    return res.json({
-        status:validKey==true?200:401,
-        valid: validKey
-    })
-
+    if (validKey) {
+        return res.json({
+            status:200
+        })
+    } else {
+        throw new Error("Not authorised")
+    }
 })
 
-exports.matchAllNow = async (req, res, next) => {
+exports.getDonors =catchAsync( async (req , res)=>{
 
-    initiateMatch()
-        .then((data) => {
-            res.status(200).json({
-                status: "Success",
-                data
-            })
+        const donors = await Donor.find({});
+        return res.json({
+            status:200,
+            data:donors
         })
-        .catch(e => {
-            res.status(500).json({
-                status: "Failed",
-                message: e
-            })
+    
+    
+})
+
+exports.getPatients = catchAsync( async (req , res)=>{
+
+        const patients = await Patient.find({});
+        
+        return res.json({
+            status:200,
+            data:patients
         })
+
+    
+})
+
+exports.triggerMatch = async(req , res)=>{
+
+    try {
+        await matchController.match(req.body.data["donor"],req.body.data["patient"])
+
+        res.status(200).json({
+            status:200
+        })
+
+    } catch (e) {
+        throw e
+    }
+
+
 }
+
+
+
+// exports.matchAllNow = async (req, res, next) => {
+
+//     initiateMatch()
+//         .then((data) => {
+//             res.status(200).json({
+//                 status: "Success",
+//                 data
+//             })
+//         })
+//         .catch(e => {
+//             res.status(500).json({
+//                 status: "Failed",
+//                 message: e
+//             })
+//         })
+// }
