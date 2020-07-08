@@ -8,12 +8,12 @@ let ques2 = "2. Age : "
 let ques3 = "3. Gender : "
 let ques4 = "4. Contact No. : "
 let ques5 = "5. Email : "
-let ques6 = "6. Have you ever been pregnant?"
+let ques6 = "6. Blood : "
 let ques7 = "7. Weight :"
 let ques8 = "8. Location : "
-let ques9 = "9. Are you pregnant ? : "
+let ques9 = "9. Have you ever been pregnant? : "
 let ques10 = "10. Have you obtained a tattoo or piercing in the last 12 months? : "
-let ques11 = "11. Do you have hypertension or high Blood Pressure (BP >180) ? : "
+let ques11 = "11. Do you have hypertension or high Blood Pressure (BP >180)? : "
 let ques12 = "12. Do you suffer from anemia or any blood/bleeding disorders? : "
 let ques13 = "13. Have you tested positive for any communicable diseases like HIV, Hepatitis, Syphilis in the past? : "
 let ques14 = "14. Have you tested positive for any infectious diseases like TB, Malaria? : "
@@ -72,7 +72,7 @@ exports.renderDonorEmail = async(donor)=>{
       .text(`${list_char} ${ques3} ${donor.sex}`)
       .text(`${list_char} ${ques4} ${donor.contact}`)
       .text(`${list_char} ${ques5} ${donor.email}`)
-      .text(`${list_char} ${ques6} ${donor.blood}`)
+      .text(`${list_char} ${ques6} ${donor.pregnant}`)
       .text(`${list_char} ${ques7} ${donor.weight}`)
       .text(`${list_char} ${ques8} ${donor.location}`)
       .moveDown()
