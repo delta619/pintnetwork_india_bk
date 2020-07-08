@@ -22,10 +22,11 @@ fillDetails = function(donor){
 
   let dt = new Date(donor.last_symptom_discharge_date);
 
-  let day = dt.getDate();
-  let month = dt.getMonth()+1;
-  let year = dt.getFullYear();
-  
+  dt = dt.toLocaleDateString().split('/');
+  day = dt[1];
+  month = dt[0];
+  year = dt[2];
+
   donor.last_symptom_discharge_date = `${day}-${month}-${year}`;
 
 
