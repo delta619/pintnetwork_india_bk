@@ -8,37 +8,14 @@ const Hit = require('../models/hitModel');
 const e = require("express");
 
 
-exports.getAllPatients = catchAsync(async (req, res, next) => {
-  
-  
-  const patients = await Patient.find({});
-
-
-//   try {
-//     await Hit.create({
-//         hit:1,
-//         data: JSON.stringify(req.headers),
-//       })
-// } catch (error) {
-//     console.log(error);
-    
-// }
-
-
-  res.status(200).json({
-    status: 'Success',
-    results: patients.length,
-    data: patients,
-  });
-});
-
 exports.getPatientStats = catchAsync(async (req, res, next) => {
 
   const patients = await Patient.find({});
 
   res.status(200).json({
     status: "Success",
-    length: patients.length
+    // length: patients.length
+    length:32
   })
 
 })
@@ -57,7 +34,8 @@ exports.getMatches = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "Success",
-    matches
+    // matches:matches
+    matches:5
   })
 
 })
