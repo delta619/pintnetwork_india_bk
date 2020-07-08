@@ -66,7 +66,7 @@ exports.renderDonorEmail = async(donor)=>{
 
     doc
       .font(__dirname+'/fonts/poppins.ttf')
-      .fontSize(14)
+      .fontSize(12)
       .text(`${list_char} ${ques1} ${donor.name}`)
       .text(`${list_char} ${ques2} ${donor.age}`)
       .text(`${list_char} ${ques3} ${donor.sex}`)
