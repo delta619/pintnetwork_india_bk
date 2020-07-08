@@ -45,9 +45,9 @@ app.use(xss());
 
 // setting global cors
 
-if(process.env.NODE_ENV == "development"){
+// if(process.env.NODE_ENV == "development"){
     app.use(cors());
-}
+// }
 
 // prevent parameter pollution
 
