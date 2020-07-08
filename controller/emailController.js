@@ -9,7 +9,7 @@ exports.sendMatchMailDonor = async(currentDonor, session_otp) => {
        await email.sendEmailWithAttachments({
             email: currentDonor.email,
             subject: 'PintNetwork - Patient Found',
-            message: `<br>Dear ${currentDonor.name} ,<br>
+            message: `<br>Dear ${currentDonor.name},<br>
         <br>Great news! We’ve found you a patient who needs plasma.<br>
         <br>Here is the patient OTP: ${session_otp}<br>
         <br>The patient will contact you within the next 24-48 hours. In case of any further delay, please
