@@ -20,6 +20,15 @@ fillDetails = function(donor){
     }
   });
 
+  let date = donor.last_symptom_discharge_date;
+
+  let day = `${date[8]}${date[9]}`
+  let month = `${date[5]}${date[6]}`
+  let year = `${date[0]}${date[1]}${date[2]}${date[3]}`
+
+
+  donor.last_symptom_discharge_date = `${day}-${month}-${year}`;
+
           let val =[
             [`Name : ${donor.name}`],
             [`Age : ${donor.age}`],

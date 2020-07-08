@@ -4,7 +4,6 @@ const APIFeatures = require("../utils/apiFeatures");
 const email = require('./../utils/email');
 const sms = require('../utils/smsService');
 
-const Hit = require('../models/hitModel');
 const e = require("express");
 
 
