@@ -15,12 +15,15 @@ exports.match = async (donor, patient) => {
 console.log("updating donor");
 
 
-    await Donor.findOneAndUpdate(donor._id ,{
+    const temp = await Donor.findOneAndUpdate(donor._id ,{
         matchedEarlier:true,
         matchedTo:patient._id
+    },{
+        new:true
     })
 
-console.log("updating patient");
+
+console.log("updating patient",temp);
 
     await Patient.findOneAndUpdate(patient._id ,{
         matchedEarlier:true,
