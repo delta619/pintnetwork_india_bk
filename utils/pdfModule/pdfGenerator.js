@@ -46,7 +46,7 @@ fillDetails = function(donor){
             [`Do you currently have any symptoms of fever/cough/ cold? : ${donor.flu}`],
             [`Was your COVID diagnosis confirmed by a laboratory test? : ${donor.labTestConfirm}`],
             [`Has it been 14 days since the last day of COVID symptoms? : ${donor.days14over}`],
-            [`Date of last symptoms : ${new Date(moment(donor.last_symptom_discharge_date.for).format(DD-MM-YYYY))}`],
+            [`Date of last symptoms : ${new Date(moment(donor.last_symptom_discharge_date.for).format('DD-MM-YYYY'))}`],
             [`Have you had a follow up test that was negative for COVID-19? : ${donor.hadFollowUp}`],
             [`Do you have a hospital discharge report? : ${donor.dischargeReport}`],
             [`Do you have an Aadhar Card? : ${donor.aadhaar}`],
