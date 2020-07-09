@@ -22,13 +22,14 @@ fillDetails = function(donor){
 
   let dt = new Date(donor.last_symptom_discharge_date);
 
-  dt = dt.toLocaleDateString().split('/');
-  day = dt[1];
-  month = dt[0];
-  year = dt[2];
+  dt = dt.toDateString().split(' ');
+  day = dt[2];
+  month = dt[1];
+  year = dt[3];
 
   donor.last_symptom_discharge_date = `${day}-${month}-${year}`;
 
+  
 
           let val =[
             [`Name : ${donor.name}`],
