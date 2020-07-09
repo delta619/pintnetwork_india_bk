@@ -2,6 +2,7 @@ const PDFDocument = require('pdfkit');
 const constants = require('../../constants');
 const fs = require('fs');
 const path = require('path');
+const moment = require("moment");
 
 fillDetails = function(donor){
 
@@ -20,14 +21,7 @@ fillDetails = function(donor){
     }
   });
 
-  let dt = new Date(donor.last_symptom_discharge_date);
 
-  dt = dt.toDateString().split(' ');
-  day = dt[2];
-  month = dt[1];
-  year = dt[3];
-
-  donor.last_symptom_discharge_date = `${day}-${month}-${year}`;
 
   
 
@@ -52,7 +46,7 @@ fillDetails = function(donor){
             [`Do you currently have any symptoms of fever/cough/ cold? : ${donor.flu}`],
             [`Was your COVID diagnosis confirmed by a laboratory test? : ${donor.labTestConfirm}`],
             [`Has it been 14 days since the last day of COVID symptoms? : ${donor.days14over}`],
-            [`Date of last symptoms : ${donor.last_symptom_discharge_date}`],
+            [`Date of last symptoms : ${new Date(moment(donor.last_symptom_discharge_date.for).format(DD-MM-YYYY))}`],
             [`Have you had a follow up test that was negative for COVID-19? : ${donor.hadFollowUp}`],
             [`Do you have a hospital discharge report? : ${donor.dischargeReport}`],
             [`Do you have an Aadhar Card? : ${donor.aadhaar}`],
