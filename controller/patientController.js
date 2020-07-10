@@ -14,7 +14,6 @@ exports.getPatientStats = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     length: patients.length
-    // length:32
   })
 
 })
@@ -34,7 +33,7 @@ exports.getMatches = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     // matches:matches
-    matches:5
+    matches:10
   })
 
 })
