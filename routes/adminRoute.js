@@ -20,6 +20,8 @@ router
 .post(authenticator.checkAdmin , adminController.triggerMatch)
 
 
-
+router
+.route('/excel')
+.post(authenticator.checkAdmin , adminController.excelTrigger)
 
 module.exports = router
