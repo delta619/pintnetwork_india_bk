@@ -23,6 +23,8 @@ router
 .route('/getCities')
 .post(authenticator.checkAdmin , adminController.getCities)
 
-
+router
+.route('/excel')
+.post(authenticator.checkAdmin , adminController.excelTrigger)
 
 module.exports = router
