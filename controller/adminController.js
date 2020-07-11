@@ -150,8 +150,24 @@ exports.excelTrigger = async (req, res) => {
 
         await workbook.xlsx.writeFile(`${constants.EXCEL_FILE_ADMIN_PATH}/excel.xlsx`)
 
-        res.download(`${constants.EXCEL_FILE_ADMIN_PATH}/excel.xlsx`);
 
+
+        const options = {
+            headers: {
+              'x-timestamp': Date.now(),
+              'x-sent': true
+            }
+          }
+
+        res.sendFile(`${constants.EXCEL_FILE_ADMIN_PATH}/excel.xlsx`, options, (err)=> {
+            if (err) {
+                throw err
+            } else {
+            console.log('Xlsx file downloaded')
+            }
+        })
+
+        
     } catch (e) {
         throw e;
     }
