@@ -20,7 +20,7 @@ exports.checkAdminLogin =catchAsync( async (req, res, next) => {
 
 exports.getDonors =catchAsync( async (req , res)=>{
 
-        const donors = await Donor.find({});
+        const donors = await Donor.find(req["body"]["filter"]);
         return res.json({
             status:200,
             data:donors
@@ -31,7 +31,7 @@ exports.getDonors =catchAsync( async (req , res)=>{
 
 exports.getPatients = catchAsync( async (req , res)=>{
 
-        const patients = await Patient.find({});
+        const patients = await Patient.find(req["body"]["filter"]);
         
         return res.json({
             status:200,
@@ -57,21 +57,26 @@ exports.triggerMatch = async(req , res)=>{
 
 }
 
+exports.getCities = async (req , res )=>{
 
+    const donors = await Donor.find({});
+    const patients = await Patient.find({});
 
-// exports.matchAllNow = async (req, res, next) => {
+    let cities = [];
 
-//     initiateMatch()
-//         .then((data) => {
-//             res.status(200).json({
-//                 status: "Success",
-//                 data
-//             })
-//         })
-//         .catch(e => {
-//             res.status(500).json({
-//                 status: "Failed",
-//                 message: e
-//             })
-//         })
-// }
+    donors.forEach(donor => {
+        cities.push(donor["city"]);
+    });
+
+    patients.forEach(patient => {
+        cities.push(patient["city"]);
+    });
+    cities = cities.filter((item, i, ar) => ar.indexOf(item) === i);
+    res.json({
+        status:"success",
+        data:{
+            cities
+        }
+    })
+
+}

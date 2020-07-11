@@ -19,6 +19,9 @@ router
 .route('/triggerMatch')
 .post(authenticator.checkAdmin , adminController.triggerMatch)
 
+router
+.route('/getCities')
+.post(authenticator.checkAdmin , adminController.getCities)
 
 
 
