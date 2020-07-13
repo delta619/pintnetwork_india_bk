@@ -1,4 +1,6 @@
 const Patient = require("../models/patientModel");
+const Donor = require("../models/donorModel");
+
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("../utils/apiFeatures");
 const email = require('./../utils/email');
@@ -20,20 +22,20 @@ exports.getPatientStats = catchAsync(async (req, res, next) => {
 
 exports.getMatches = catchAsync(async (req, res, next) => {
 
-  const patients = await Patient.find({})
+  const donors = await Donor.find({})
 
   let matches = 0;
 
-  for (let i = 0; i < patients.length; i++) {
-    if (patients[i]["matchedEarlier"] == true) {
+  for (let i = 0; i < donors.length; i++) {
+    if (donors[i]["matchedEarlier"] == true) {
       matches = matches + 1;
     }
   }
 
   res.status(200).json({
     status: "Success",
-    // matches:matches
-    matches:10
+    matches
+    // matches:10
   })
 
 })
