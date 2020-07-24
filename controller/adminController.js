@@ -25,9 +25,10 @@ exports.getDonors = catchAsync(async (req, res) => {
 
 
 
-    const donors = await Donor.find(req["body"]["filter"]);
+    const donors = await Donor.find(req["body"]["filter"]).populate('matchedTo','name')
     return res.json({
         status: 200,
+        results:donors.length,
         data: donors
     })
 
@@ -37,9 +38,10 @@ exports.getDonors = catchAsync(async (req, res) => {
 exports.getPatients = catchAsync(async (req, res) => {
 
 
-    const patients = await Patient.find(req["body"]["filter"]);
+    const patients = await Patient.find(req["body"]["filter"]).populate('matchedTo','name');
     return res.json({
         status: 200,
+        results:patients.length,
         data: patients
     })
 

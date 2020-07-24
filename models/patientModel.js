@@ -51,11 +51,12 @@ const patientSchema = new mongoose.Schema({
         default:false
     },
     matchedTo: {
-        type: mongoose.Schema.Types.ObjectId  
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Donor'
     }
 });
 
 
-const Patient = mongoose.model('patient',patientSchema);
+const Patient = mongoose.model('Patient',patientSchema);
 
 module.exports = Patient;
