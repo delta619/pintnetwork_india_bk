@@ -11,25 +11,43 @@ exports.match = async (donor, patient) => {
 
   console.log('updating donor');
 
-  await Donor.findByIdAndUpdate(
-    donor._id,
-    {
-      matchedEarlier: true,
-      matchedTo: patient._id,
-    },
-    {
-      new: true,
-    }
-  );
+  await Donor.findById(donor._id, (err, doc) => {
+    if (doc) {
+      doc.matchedEarlier = true;
+      let list = doc.matchedTo;
+      list.push(patient._id);
+      doc.matchedTo = list;
 
-  await Patient.findByIdAndUpdate(patient._id, {
-    matchedEarlier: true,
-    matchedTo: donor._id,
+      console.log(doc.matchedTo);
+      doc.save((err) => {
+        if (err) console.log('Update was not saved', err);
+      });
+    }
+    if (err) {
+      throw err;
+    }
+  });
+
+  await Patient.findById(patient._id, (err, doc) => {
+    if (doc) {
+      doc.matchedEarlier = true;
+      let list = doc.matchedTo;
+      list.push(donor._id);
+      doc.matchedTo = list;
+
+      console.log(doc.matchedTo);
+      doc.save((err) => {
+        if (err) console.log('Update was not saved', err);
+      });
+    }
+    if (err) {
+      throw err;
+    }
   });
 
   //SOME VERIFICATION THEN BELOW
 
-  await pdf.renderDonorEmail(donor);
+  // await pdf.renderDonorEmail(donor);
 
   //    if Donor doesnt have an email
 

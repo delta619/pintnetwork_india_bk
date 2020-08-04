@@ -84,13 +84,19 @@ const donorSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  matchedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient',
-  },
+  matchedTo: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Patient',
+    },
+  ],
   healthy: {
     type: Boolean,
     default: true,
+  },
+  status: {
+    type: String,
+    default: 'new',
   },
 });
 

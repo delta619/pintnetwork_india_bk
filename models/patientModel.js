@@ -46,9 +46,15 @@ const patientSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  matchedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Donor',
+  matchedTo: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Donor',
+    },
+  ],
+  status: {
+    type: String,
+    default: 'new',
   },
 });
 
