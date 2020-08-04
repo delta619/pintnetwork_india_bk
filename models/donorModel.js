@@ -96,7 +96,7 @@ const donorSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: 'new',
+    default: 'Other',
   },
 });
 
