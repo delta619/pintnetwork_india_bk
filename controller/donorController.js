@@ -82,6 +82,5 @@ exports.getDonorStats = catchAsync(async (req, res, next) => {
   res.json({
     status: 200,
     length: donors.length,
-    // length: 101,
   });
 });
