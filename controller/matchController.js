@@ -9,8 +9,6 @@ const constants = require('../constants');
 exports.match = async (donor, patient) => {
   let otp = 1000 + Math.floor(Math.random() * 1000);
 
-  console.log('updating donor');
-
   await Donor.findById(donor._id, (err, doc) => {
     if (doc) {
       doc.matchedEarlier = true;
@@ -47,22 +45,18 @@ exports.match = async (donor, patient) => {
 
   //SOME VERIFICATION THEN BELOW
 
-  // await pdf.renderDonorEmail(donor);
-
   //    if Donor doesnt have an email
 
   if (!donor.email) {
     donor.email = 'Not available';
-    await emailController.sendMatchMailPatient(donor, patient, otp);
+    await emailController.sendMatchMailPatient(donor, patient);
   } else if (!patient.email) {
     //    Patient doesnt have a mail
-    await emailController.sendMatchMailDonor(donor, otp);
-    // fs.unlinkSync(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${donor._id}.pdf`);
+    await emailController.sendMatchMailDonor(donor, patient);
   } else {
     //    if all have emails
-    await emailController.sendMatchMailDonor(donor, otp);
-    await emailController.sendMatchMailPatient(donor, patient, otp);
-    // fs.unlinkSync(`${constants.DONOR_FORM_ATTACHMENT_PATH}/${donor._id}.pdf`);
+    await emailController.sendMatchMailDonor(donor, patient);
+    await emailController.sendMatchMailPatient(donor, patient);
   }
 
   await sms.sendMatchResponseDonor({
@@ -74,7 +68,6 @@ exports.match = async (donor, patient) => {
   });
 
   await sms.sendMatchResponsePatient({
-    // to: patient.contact,
     to: patient.contact,
     var1: patient.name,
     var2: donor.sex == 'M' ? 'his' : 'her',

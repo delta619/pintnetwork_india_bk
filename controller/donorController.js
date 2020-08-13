@@ -24,27 +24,12 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
   await Donor.create(donor);
 
-  if (!donor.healthy) {
-    await sms.unhealthy_donor_greeting(donor);
+  await sms.sendWelcomeMessage(donor);
 
-    await email.sendEmailPlain({
-      email: donor.email,
-      subject: 'Welcome to PintNetwork',
-      message: `
-      Dear ${donor.name},<br>
-      <br>Thank you for registering with pintnetwork.com.<br>
-      <br>Unfortunately you did not meet the criteria for plasma donation.<br>
-      <br>Thank you for your time and effort, we’d love to know if we can assist you in any further way.<br>
-      <br>Regards,
-      <br>Team PINT`,
-    });
-  } else {
-    await sms.sendWelcomeMessage(donor);
-
-    await email.sendEmailPlain({
-      email: donor.email,
-      subject: 'Welcome to PintNetwork',
-      message: `
+  await email.sendEmailPlain({
+    email: donor.email,
+    subject: 'Welcome to PintNetwork',
+    message: `
       <br>Dear ${donor.name},<br>
       <br>Thank you for registering with pintnetwork.com.<br>
       <br>We are trying our best to find you a patient in need of plasma within the next 24-48 hours.<br>
@@ -52,8 +37,7 @@ exports.addDonor = catchAsync(async (req, res, next) => {
       <br>We thank you for your time.<br>
       <br>Regards,
       <br>Team PINT`,
-    });
-  }
+  });
 
   return res.json({
     status: 200,
