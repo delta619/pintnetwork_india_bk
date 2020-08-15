@@ -64,16 +64,14 @@ exports.match = async (donor, patient) => {
 
     to: donor.contact,
     var1: donor.name,
-    var2: otp,
+    var2: '',
   });
 
   await sms.sendMatchResponsePatient({
     to: patient.contact,
     var1: patient.name,
     var2: donor.sex == 'M' ? 'his' : 'her',
-    var3: donor.name,
-    var4: donor.contact,
-    var5: donor.email,
-    var6: otp,
+    var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
+    var4: '',
   });
 };
