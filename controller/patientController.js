@@ -50,7 +50,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
       <br>Dear ${patient.name},<br>
       <br>Thank you for registering with pintnetwork.com.<br>
       <br>We are trying our best to find you with a donor within the next 24-48 hours.<br>
-      <br>Once we have made a successful match, you will receive a text message and email with the donor’s details and OTP.<br>
+      <br>Once we have made a successful match, you will receive a text message and email with the donor’s details.<br>
       <br>We thank you for your time.<br>
       <br>Regards,
       <br>Team PINT
