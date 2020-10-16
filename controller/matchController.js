@@ -44,7 +44,7 @@ exports.match = async (donor, patient) => {
       }
     });
 
-    //SOME VERIFICATION THEN BELOW
+    //SOME text messages BELOW
 
     if (donor.contact) {
       await sms.sendMatchResponseDonor({
