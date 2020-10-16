@@ -58,7 +58,7 @@ exports.sendErrorMail = async (error) => {
       email: 'ashutoshmalla6197@gmail.com',
       subject: 'PintNetwork - Exception occurred',
       message: `
-      Hi Ashutosh,
+      Hi Ashutosh,\n
       ${error}
         `,
     });

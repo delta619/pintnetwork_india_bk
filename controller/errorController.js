@@ -4,9 +4,8 @@ module.exports = async (err, req, res, next) => {
   console.log(err);
 
   if (process.env.NODE_ENV == 'production') {
+    sendErrorMail(err + err.stack);
     err.message = 'Something went wrong';
-
-    sendErrorMail(err);
   }
 
   res.json({

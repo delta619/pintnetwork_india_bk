@@ -10,6 +10,7 @@ const config = require('../config/config');
 
 const sms = require('../utils/smsService');
 const AppError = require('../utils/AppError');
+const Patient = require('../models/patientModel');
 
 exports.addDonor = catchAsync(async (req, res, next) => {
   let donor = JSON.parse(JSON.stringify(req.body));
@@ -24,20 +25,24 @@ exports.addDonor = catchAsync(async (req, res, next) => {
 
   await Donor.create(donor);
 
-  await sms.sendWelcomeMessage(donor);
+  if (donor.contact) {
+    await sms.sendWelcomeMessage(donor);
+  }
 
-  await email.sendEmailPlain({
-    email: donor.email,
-    subject: 'Welcome to PintNetwork',
-    message: `
-      <br>Dear ${donor.name},<br>
-      <br>Thank you for registering with pintnetwork.com.<br>
-      <br>We are trying our best to find you a patient in need of plasma within the next 24-48 hours.<br>
-      <br>Once we have made a successful match, you will receive a text message and an email.<br>
-      <br>We thank you for your time.<br>
-      <br>Regards,
-      <br>Team PINT`,
-  });
+  if (donor.email) {
+    await email.sendEmailPlain({
+      email: donor.email,
+      subject: 'Welcome to PintNetwork',
+      message: `
+        <br>Dear ${donor.name},<br>
+        <br>Thank you for registering with pintnetwork.com.<br>
+        <br>We are trying our best to find you a patient in need of plasma within the next 24-48 hours.<br>
+        <br>Once we have made a successful match, you will receive a text message and an email.<br>
+        <br>We thank you for your time.<br>
+        <br>Regards,
+        <br>Team PINT`,
+    });
+  }
 
   return res.json({
     status: 200,

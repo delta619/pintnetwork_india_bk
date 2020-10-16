@@ -41,21 +41,25 @@ exports.addPatient = catchAsync(async (req, res, next) => {
 
   await Patient.create(patient);
 
-  await sms.sendWelcomeMessage(patient);
+  if (patient.contact) {
+    await sms.sendWelcomeMessage(patient);
+  }
 
-  await email.sendEmailPlain({
-    email: patient.email,
-    subject: 'Welcome to PintNetwork',
-    message: `
-      <br>Dear ${patient.name},<br>
-      <br>Thank you for registering with pintnetwork.com.<br>
-      <br>We are trying our best to find you with a donor within the next 24-48 hours.<br>
-      <br>Once we have made a successful match, you will receive a text message and email with the donor’s details.<br>
-      <br>We thank you for your time.<br>
-      <br>Regards,
-      <br>Team PINT
-      `,
-  });
+  if (patient.email) {
+    await email.sendEmailPlain({
+      email: patient.email,
+      subject: 'Welcome to PintNetwork',
+      message: `
+        <br>Dear ${patient.name},<br>
+        <br>Thank you for registering with pintnetwork.com.<br>
+        <br>We are trying our best to find you with a donor within the next 24-48 hours.<br>
+        <br>Once we have made a successful match, you will receive a text message and email with the donor’s details.<br>
+        <br>We thank you for your time.<br>
+        <br>Regards,
+        <br>Team PINT
+        `,
+    });
+  }
 
   return res.status(200).json({
     status: 200,

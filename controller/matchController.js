@@ -45,21 +45,27 @@ exports.match = async (donor, patient) => {
     });
 
     //SOME VERIFICATION THEN BELOW
-    await sms.sendMatchResponseDonor({
-      // to: donor.contact,
 
-      to: donor.contact,
-      var1: donor.name,
-      var2: '',
-    });
+    if (donor.contact) {
+      await sms.sendMatchResponseDonor({
+        // to: donor.contact,
 
-    await sms.sendMatchResponsePatient({
-      to: patient.contact,
-      var1: patient.name,
-      var2: donor.sex == 'M' ? 'his' : 'her',
-      var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
-      var4: '',
-    });
+        to: donor.contact,
+        var1: donor.name,
+        var2: '',
+      });
+    }
+
+    if (patient.contact) {
+      await sms.sendMatchResponsePatient({
+        to: patient.contact,
+        var1: patient.name,
+        var2: donor.sex == 'M' ? 'his' : 'her',
+        var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
+        var4: '',
+      });
+    }
+
     //    if Donor doesnt have an email
 
     if (!donor.email) {
