@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { sendErrorMail } = require('../controller/emailController');
 
 exports.sendWelcomeMessage = async (person) => {
   try {
@@ -13,6 +14,7 @@ exports.sendWelcomeMessage = async (person) => {
       },
     });
   } catch (error) {
+    await sendErrorMail(error);
     throw error;
   }
 };
@@ -71,6 +73,8 @@ exports.sendMatchResponseDonor = async (data) => {
       },
     });
   } catch (err) {
+    await sendErrorMail(error);
+
     throw err;
   }
 };
@@ -91,6 +95,8 @@ exports.sendMatchResponsePatient = async (data) => {
       },
     });
   } catch (error) {
+    await sendErrorMail(error);
+
     throw error;
   }
 };

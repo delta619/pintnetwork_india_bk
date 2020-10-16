@@ -1,18 +1,12 @@
+module.exports = async (err, req, res, next) => {
+  console.log(err);
 
-module.exports = async(err , req , res , next)=>{
+  if (process.env.NODE_ENV == 'production') {
+    err.message = 'Something went wrong';
+  }
 
-console.log(err);
-
-    if(process.env.NODE_ENV == 'production'){
-        
-        err.message = "Somethig went wrong"; 
-        
-    }
-
-
-    res.json({
-        status:500,
-        message:err.message
-    })
-    
-}
+  res.json({
+    status: 500,
+    message: err.message,
+  });
+};

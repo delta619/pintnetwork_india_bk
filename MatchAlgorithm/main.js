@@ -1,113 +1,99 @@
-const Donor = require("../models/donorModel")
-const Patient = require("../models/patientModel");
+const Donor = require('../models/donorModel');
+const Patient = require('../models/patientModel');
 const sendEmail = require('./../utils/email');
 const { inform, isMatch } = require('../utils/matchPeople');
-const e = require("express");
 
 module.exports = async () => {
+  const [donors, patients] = await Promise.all([
+    await Donor.find({
+      healthy: true,
+      matchedEarlier: false,
+    }),
+    await Patient.find({
+      healthy: true,
+      matchedEarlier: false,
+    }),
+  ]).catch((e) => {
+    throw e;
+  });
 
-    
+  console.log(`Got ${donors.length} and ${patients.length} `);
 
-    const [donors, patients] = await Promise.all([
-        await Donor.find({
-            healthy: true,
-            matchedEarlier: false,
-        }),
-        await Patient.find({
-            healthy: true,
-            matchedEarlier: false
-        })
-    ]).catch(e=>{
-        throw e;
-    })
+  // Set a property of temporary match to prevent duplicasy in for-loop, which is after the query. (local match);
 
-    console.log(`Got ${donors.length} and ${patients.length} `);
+  // sort donors
+  donors.sort((a, b) =>
+    new Date(a.registeredAt).getTime() > new Date(b.registeredAt).getTime()
+      ? 1
+      : -1
+  );
 
-    // Set a property of temporary match to prevent duplicasy in for-loop, which is after the query. (local match);
+  // sort patients
 
-    // sort donors
-    donors.sort((a, b) => (new Date(a.registeredAt).getTime() > new Date(b.registeredAt).getTime()) ? 1 : -1)
+  patients.sort((a, b) =>
+    new Date(a.registeredAt).getTime() > new Date(b.registeredAt).getTime()
+      ? 1
+      : -1
+  );
 
+  let matches = 0;
 
-    // sort patients
+  // Setting global not-matched for every eligible candidate
 
-    patients.sort((a, b) => (new Date(a.registeredAt).getTime() > new Date(b.registeredAt).getTime()) ? 1 : -1)
+  for (let i = 0; i < donors.length; i++) {
+    donors[i].matched = false;
+  }
+  for (let i = 0; i < patients.length; i++) {
+    patients[i].matched = false;
+  }
 
+  for (let p = 0; p < patients.length; p++) {
+    for (let d = 0; d < donors.length; d++) {
+      console.log(`Combination ${donors[d].blood} and ${patients[p].blood}`);
 
-    let matches = 0;
+      if (donors[d].matched || patients[p].matched) {
+        continue;
+      }
 
-    // Setting global not-matched for every eligible candidate
+      if (isMatch(donors[d], patients[p])) {
+        matches++;
 
-    for (let i = 0; i < donors.length; i++) {
-        donors[i].matched = false;
-    }
-    for (let i = 0; i < patients.length; i++) {
-        patients[i].matched = false;
-    }
+        donors[d].matched = true;
+        patients[p].matched = true;
 
-    for (let p = 0; p < patients.length; p++) {
-        for (let d = 0; d < donors.length; d++) {
-     
-     
-            console.log(`Combination ${donors[d].blood} and ${patients[p].blood}`);
+        console.log(
+          `Donor and Patient matched are ${donors[d].name} and ${patients[p].name}`
+        );
 
-            if (donors[d].matched || patients[p].matched ) {
-                continue;
-            }
+        try {
+          await Promise.all([
+            Donor.findByIdAndUpdate(donors[d]._id, {
+              matchedEarlier: true,
+              matchedTo: patients[p]._id,
+            }),
+            Patient.findByIdAndUpdate(patients[p]._id, {
+              matchedEarlier: true,
+              matchedTo: donors[d]._id,
+            }),
+          ]);
+        } catch (err) {
+          console.log(
+            'The Match couldnt happen at DB, so resetting their local match. ',
+            err
+          );
 
-            if (isMatch(donors[d], patients[p])) {
-
-                matches++;
-
-                donors[d].matched = true;
-                patients[p].matched = true;
-
-                console.log(`Donor and Patient matched are ${donors[d].name} and ${patients[p].name}`);
-
-                try {
-                    await Promise.all([
-                         
-                        Donor.findByIdAndUpdate(donors[d]._id, {
-                            matchedEarlier: true,
-                            matchedTo: patients[p]._id
-                        })
-                        ,
-                         Patient.findByIdAndUpdate(patients[p]._id, {
-                            matchedEarlier: true,
-                            matchedTo: donors[d]._id
-                        }),
-                    ])
-
-                } catch (err) {
-
-
-                    console.log("The Match couldnt happen at DB, so resetting their local match. ", err);
-
-                    throw e;
-
-                }
-                    try{
-                        await inform(donors[d], patients[p]);
-
-                    }catch(e){
-                        donors[d].matched = false;
-                        patients[p].matched = false;
-                        throw e;
-                    }
-                
-            }
+          throw e;
         }
-
+        try {
+          await inform(donors[d], patients[p]);
+        } catch (e) {
+          donors[d].matched = false;
+          patients[p].matched = false;
+          throw e;
+        }
+      }
     }
-    
-    console.log(`Total matches `, matches)
+  }
 
-
-
-
-
-
-
-
-
-}
+  console.log(`Total matches `, matches);
+};

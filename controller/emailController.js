@@ -51,3 +51,18 @@ exports.sendMatchMailPatient = async (currentDonor, currentPatient) => {
     throw e;
   }
 };
+
+exports.sendErrorMail = async (error) => {
+  try {
+    email.sendEmailPlain({
+      email: 'ashutoshmalla6197@gmail.com',
+      subject: 'PintNetwork - Exception occurred',
+      message: `
+      Hi Ashutosh,
+      ${error}
+        `,
+    });
+  } catch (error) {
+    throw e;
+  }
+};
