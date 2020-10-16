@@ -15,6 +15,7 @@ const xss = require('xss-clean');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
+const AppError = require('./utils/AppError');
 // GLOBAL
 
 app.use(morgan('dev'));
@@ -91,9 +92,7 @@ app.all('*', (req, res, next) => {
   // })
   console.log('unhandled route was traced');
 
-  const err = new App(`Couldnt find ${req.originalUrl}`);
-  err.statusCode = 404;
-  next(err);
+  return next(AppError(`Couldnt find ${req.originalUrl}`));
 });
 
 app.use(globalErrorController);
