@@ -44,21 +44,6 @@ exports.match = async (donor, patient) => {
   });
 
   //SOME VERIFICATION THEN BELOW
-
-  //    if Donor doesnt have an email
-
-  if (!donor.email) {
-    donor.email = 'Not available';
-    await emailController.sendMatchMailPatient(donor, patient);
-  } else if (!patient.email) {
-    //    Patient doesnt have a mail
-    await emailController.sendMatchMailDonor(donor, patient);
-  } else {
-    //    if all have emails
-    await emailController.sendMatchMailDonor(donor, patient);
-    await emailController.sendMatchMailPatient(donor, patient);
-  }
-
   await sms.sendMatchResponseDonor({
     // to: donor.contact,
 
@@ -74,4 +59,17 @@ exports.match = async (donor, patient) => {
     var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
     var4: '',
   });
+  //    if Donor doesnt have an email
+
+  if (!donor.email) {
+    donor.email = 'Not available';
+    await emailController.sendMatchMailPatient(donor, patient);
+  } else if (!patient.email) {
+    //    Patient doesnt have a mail
+    await emailController.sendMatchMailDonor(donor, patient);
+  } else {
+    //    if all have emails
+    await emailController.sendMatchMailDonor(donor, patient);
+    await emailController.sendMatchMailPatient(donor, patient);
+  }
 };
