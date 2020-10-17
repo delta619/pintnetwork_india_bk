@@ -91,8 +91,10 @@ app.all('*', (req, res, next) => {
   //     message:`Couldnt find ${req.originalUrl} `
   // })
   console.log('unhandled route was traced');
-
-  next(new AppError(`Couldnt find ${req.originalUrl}`, 404));
+  if (req.originalUrl !== '/') {
+    next(new AppError(`Couldnt find ${req.originalUrl}`, 404));
+  }
+  return res.status(204).end();
 });
 
 app.use(globalErrorController);
