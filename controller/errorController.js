@@ -1,14 +1,16 @@
 const { sendErrorMail } = require('./emailController');
 
 module.exports = async (err, req, res, next) => {
-  console.log(err);
-
-  if (process.env.NODE_ENV == 'production') {
-    sendErrorMail(err + err.stack);
-    err.message = 'Something went wrong';
+  if (err.isOperational) {
+    sendErrorMail(err);
+  } else {
+    console.log('global error');
+    sendErrorMail(err);
   }
 
-  res.json({
+  err.message = 'Something went wrong';
+
+  return res.json({
     status: 500,
     message: err.message,
   });
