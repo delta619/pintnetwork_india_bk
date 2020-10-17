@@ -34,7 +34,7 @@ exports.getMatches = catchAsync(async (req, res, next) => {
 });
 
 exports.addPatient = catchAsync(async (req, res, next) => {
-  let patient = JSON.parse(JSON.stringify(req.body));
+  let patient = { ...req.body };
 
   patient.healthy =
     patient.labDiagnosed == 1 && patient.doctorPrescription == 1;

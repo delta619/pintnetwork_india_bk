@@ -98,6 +98,10 @@ const donorSchema = new mongoose.Schema({
     type: String,
     default: 'Other',
   },
+  heard_from: {
+    type: String,
+    default: 'Other',
+  },
 });
 
 const Donor = mongoose.model('Donor', donorSchema);

@@ -56,6 +56,10 @@ const patientSchema = new mongoose.Schema({
     type: String,
     default: 'Other',
   },
+  heard_from: {
+    type: String,
+    default: 'Other',
+  },
 });
 
 const Patient = mongoose.model('Patient', patientSchema);
