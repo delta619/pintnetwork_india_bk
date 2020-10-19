@@ -20,10 +20,17 @@ exports.checkAdminLogin = catchAsync(async (req, res, next) => {
 });
 
 exports.getDonors = catchAsync(async (req, res) => {
-  const donors = await Donor.find(req['body']['filter']).populate(
-    'matchedTo',
-    'name'
-  );
+  let pack = { ...req.body };
+
+  let donors = [];
+
+  if (pack['filter']['city'] !== 'recent') {
+    donors = await Donor.find(pack['filter']).populate('matchedTo', 'name');
+  } else {
+    least_date = new Date() - 48 * 60 * 60 * 1000;
+    donors = await Donor.find({ registeredAt: { $gt: least_date } });
+  }
+
   return res.json({
     status: 200,
     results: donors.length,
@@ -32,10 +39,17 @@ exports.getDonors = catchAsync(async (req, res) => {
 });
 
 exports.getPatients = catchAsync(async (req, res) => {
-  const patients = await Patient.find(req['body']['filter']).populate(
-    'matchedTo',
-    'name'
-  );
+  let pack = { ...req.body };
+
+  let patients = [];
+
+  if (pack['filter']['city'] !== 'recent') {
+    patients = await Patient.find(pack['filter']).populate('matchedTo', 'name');
+  } else {
+    least_date = new Date() - 48 * 60 * 60 * 1000;
+    patients = await Patient.find({ registeredAt: { $gt: least_date } });
+  }
+
   return res.json({
     status: 200,
     results: patients.length,

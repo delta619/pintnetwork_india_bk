@@ -102,6 +102,9 @@ const donorSchema = new mongoose.Schema({
     type: String,
     default: 'Other',
   },
+  registeredAt: {
+    type: Date,
+  },
 });
 
 const Donor = mongoose.model('Donor', donorSchema);

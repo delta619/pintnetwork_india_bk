@@ -60,6 +60,9 @@ const patientSchema = new mongoose.Schema({
     type: String,
     default: 'Other',
   },
+  registeredAt: {
+    type: Date,
+  },
 });
 
 const Patient = mongoose.model('Patient', patientSchema);
