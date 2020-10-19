@@ -28,7 +28,10 @@ exports.getDonors = catchAsync(async (req, res) => {
     donors = await Donor.find(pack['filter']).populate('matchedTo', 'name');
   } else {
     least_date = new Date() - 48 * 60 * 60 * 1000;
-    donors = await Donor.find({ registeredAt: { $gt: least_date } });
+    donors = await Donor.find({ registeredAt: { $gt: least_date } }).populate(
+      'matchedTo',
+      'name'
+    );
   }
 
   return res.json({
@@ -47,7 +50,9 @@ exports.getPatients = catchAsync(async (req, res) => {
     patients = await Patient.find(pack['filter']).populate('matchedTo', 'name');
   } else {
     least_date = new Date() - 48 * 60 * 60 * 1000;
-    patients = await Patient.find({ registeredAt: { $gt: least_date } });
+    patients = await Patient.find({
+      registeredAt: { $gt: least_date },
+    }).populate('matchedTo', 'name');
   }
 
   return res.json({
