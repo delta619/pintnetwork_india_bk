@@ -4,11 +4,9 @@ module.exports = async (err, req, res, next) => {
   if (err.isOperational) {
     sendErrorMail(err);
   } else {
-    console.log('global error');
     sendErrorMail(err);
   }
-
-  err.message = 'Something went wrong';
+  console.log(err);
 
   return res.json({
     status: 500,
