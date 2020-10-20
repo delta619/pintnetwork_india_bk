@@ -23,16 +23,23 @@ exports.getDonors = catchAsync(async (req, res) => {
   let pack = { ...req.body };
 
   let donors = [];
+  let filter = {};
+  let query;
 
-  if (pack['filter']['city'] !== 'recent') {
-    donors = await Donor.find(pack['filter']).populate('matchedTo', 'name');
-  } else {
-    least_date = new Date() - 48 * 60 * 60 * 1000;
-    donors = await Donor.find({ registeredAt: { $gt: least_date } }).populate(
-      'matchedTo',
-      'name'
-    );
+  // city filter
+  if (pack['cityFilter']['city']) {
+    filter['city'] = pack['cityFilter']['city'];
   }
+
+  // recent filter
+  if (pack['recentFilter']) {
+    let least_date = new Date() - 100 * 60 * 60 * 1000;
+    filter['registeredAt'] = { $gt: least_date };
+  }
+
+  query = Donor.find(filter).populate('matchedTo', 'name');
+
+  donors = await query;
 
   return res.json({
     status: 200,
@@ -45,15 +52,23 @@ exports.getPatients = catchAsync(async (req, res) => {
   let pack = { ...req.body };
 
   let patients = [];
+  let filter = {};
+  let query;
 
-  if (pack['filter']['city'] !== 'recent') {
-    patients = await Patient.find(pack['filter']).populate('matchedTo', 'name');
-  } else {
-    least_date = new Date() - 48 * 60 * 60 * 1000;
-    patients = await Patient.find({
-      registeredAt: { $gt: least_date },
-    }).populate('matchedTo', 'name');
+  // city filter
+  if (pack['cityFilter']['city']) {
+    filter['city'] = pack['cityFilter']['city'];
   }
+
+  // recent filter
+  if (pack['recentFilter']) {
+    let least_date = new Date() - 100 * 60 * 60 * 1000;
+    filter['registeredAt'] = { $gt: least_date };
+  }
+
+  query = Patient.find(filter).populate('matchedTo', 'name');
+
+  patients = await query;
 
   return res.json({
     status: 200,
