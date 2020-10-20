@@ -62,7 +62,7 @@ exports.getPatients = catchAsync(async (req, res) => {
 
   // recent filter
   if (pack['recentFilter']) {
-    let least_date = new Date() - 100 * 60 * 60 * 1000;
+    let least_date = new Date() - 48 * 60 * 60 * 1000;
     filter['registeredAt'] = { $gt: least_date };
   }
 
