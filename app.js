@@ -16,6 +16,7 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
 const AppError = require('./utils/AppError');
+const path = require('path');
 // GLOBAL
 
 app.use(morgan('dev'));
@@ -84,6 +85,10 @@ app.get('/api/addHit', async (req, res) => {
 app.use('/api/donor', donorRoute);
 app.use('/api/patient', patietRoute);
 app.use('/api/admin', adminRoute);
+app.use(
+  '/api/blood',
+  require(path.join(__dirname, 'routes', 'blood', 'bloodRoute.js'))
+);
 
 app.all('*', (req, res, next) => {
   // res.status(404).json({
