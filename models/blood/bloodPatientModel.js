@@ -25,7 +25,7 @@ const bloodpatientSchema = new mongoose.Schema({
   city: {
     type: String,
   },
-  atHospital: {
+  hname: {
     type: String,
   },
   heard_from: {
