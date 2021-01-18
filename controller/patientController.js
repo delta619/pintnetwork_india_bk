@@ -17,12 +17,12 @@ exports.getPatientStats = catchAsync(async (req, res, next) => {
 });
 
 exports.getMatches = catchAsync(async (req, res, next) => {
-  const donors = await Donor.find({});
+  const patients = await Patient.find({});
 
   let matches = 0;
 
-  for (let i = 0; i < donors.length; i++) {
-    if (donors[i]['matchedEarlier'] == true) {
+  for (let i = 0; i < patients.length; i++) {
+    if (patients[i]['matchedEarlier'] == true) {
       matches = matches + 1;
     }
   }
