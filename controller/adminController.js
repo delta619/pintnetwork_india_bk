@@ -31,6 +31,11 @@ exports.getDonors = catchAsync(async (req, res) => {
     filter['city'] = pack['cityFilter']['city'];
   }
 
+  // blood group filter
+  if (pack['bloodGroupFilter']) {
+    filter['blood'] = pack['bloodGroupFilter'];
+  }
+
   // recent filter
   // if (pack['recentFilter']) {
   //   let least_date = new Date() - 100 * 60 * 60 * 1000;
@@ -66,6 +71,12 @@ exports.getPatients = catchAsync(async (req, res) => {
     filter['registeredAt'] = { $gt: least_date };
   }
 
+  // blood Group Filter
+
+  if (pack['bloodGroupFilter']) {
+    filter['blood'] = pack['bloodGroupFilter'];
+  }
+
   query = Patient.find(filter).populate('matchedTo', 'name');
 
   patients = await query;
@@ -79,13 +90,14 @@ exports.getPatients = catchAsync(async (req, res) => {
 
 exports.triggerMatch = async (req, res) => {
   try {
-    await matchController.match(
-      req.body.data['donor'],
-      req.body.data['patient']
-    );
+    // await matchController.match(
+    //   req.body.data['donor'],
+    //   req.body.data['patient']
+    // );
 
     res.status(200).json({
       status: 200,
+
     });
   } catch (e) {
     throw e;
@@ -173,8 +185,8 @@ exports.excelTrigger = async (req, res) => {
       { header: 'Matched To', key: 'matchedTo' },
     ];
 
-    donorSheet.addRows(donors);
-    patientSheet.addRows(patients);
+    // donorSheet.addRows(donors);
+    // patientSheet.addRows(patients);
 
     await workbook.xlsx.writeFile(
       `${constants.EXCEL_FILE_ADMIN_PATH}/excel.xlsx`

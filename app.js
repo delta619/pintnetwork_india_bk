@@ -91,14 +91,6 @@ app.use(
 );
 
 app.all('*', (req, res, next) => {
-  // res.status(404).json({
-  //     status:"failed",
-  //     message:`Couldnt find ${req.originalUrl} `
-  // })
-  console.log('unhandled route was traced');
-  if (req.originalUrl !== '/') {
-    next(new AppError(`Couldnt find ${req.originalUrl}`, 404));
-  }
   return res.status(204).end();
 });
 
