@@ -45,25 +45,29 @@ exports.match = async (donor, patient) => {
     });
 
     //SOME text messages BELOW
-
-    if (donor.contact) {
+    try {
+      
+      if (donor.contact) {
       await sms.sendMatchResponseDonor({
-        // to: donor.contact,
-
-        to: donor.contact,
-        var1: donor.name,
-        var2: '',
-      });
-    }
-
-    if (patient.contact) {
-      await sms.sendMatchResponsePatient({
-        to: patient.contact,
-        var1: patient.name,
-        var2: donor.sex == 'M' ? 'his' : 'her',
-        var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
-        var4: '',
-      });
+          // to: donor.contact,
+  
+          to: donor.contact,
+          var1: donor.name,
+          var2: '',
+        });
+      }
+  
+      if (patient.contact) {
+        await sms.sendMatchResponsePatient({
+          to: patient.contact,
+          var1: patient.name,
+          var2: donor.sex == 'M' ? 'his' : 'her',
+          var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
+          var4: '',
+        });
+      }
+    } catch (error) {
+      
     }
 
     //    if Donor doesnt have an email

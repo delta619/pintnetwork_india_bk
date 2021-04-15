@@ -90,10 +90,10 @@ exports.getPatients = catchAsync(async (req, res) => {
 
 exports.triggerMatch = async (req, res) => {
   try {
-    // await matchController.match(
-    //   req.body.data['donor'],
-    //   req.body.data['patient']
-    // );
+    await matchController.match(
+      req.body.data['donor'],
+      req.body.data['patient']
+    );
 
     res.status(200).json({
       status: 200,
@@ -185,8 +185,8 @@ exports.excelTrigger = async (req, res) => {
       { header: 'Matched To', key: 'matchedTo' },
     ];
 
-    // donorSheet.addRows(donors);
-    // patientSheet.addRows(patients);
+    donorSheet.addRows(donors);
+    patientSheet.addRows(patients);
 
     await workbook.xlsx.writeFile(
       `${constants.EXCEL_FILE_ADMIN_PATH}/excel.xlsx`
