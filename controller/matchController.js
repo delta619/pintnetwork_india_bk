@@ -5,6 +5,7 @@ const Patient = require('../models/patientModel');
 const pdf = require('../utils/pdfModule/pdfGenerator');
 const fs = require('fs');
 const constants = require('../constants');
+const { PintDataClass } = require('../utils/PintDataClass');
 
 exports.match = async (donor, patient) => {
   // let otp = 1000 + Math.floor(Math.random() * 1000);
@@ -83,6 +84,7 @@ exports.match = async (donor, patient) => {
       await emailController.sendMatchMailDonor(donor, patient);
       await emailController.sendMatchMailPatient(donor, patient);
     }
+    PintDataClass.incr_match_count()
   } catch (error) {
     await emailController.sendErrorMail(error);
   }

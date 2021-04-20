@@ -4,6 +4,7 @@ const app = express();
 const donorRoute = require('./routes/donorRoute');
 const patietRoute = require('./routes/patientRoute');
 const adminRoute = require('./routes/adminRoute');
+const publicRoutes = require('./routes/publicRoute')
 
 const Hit = require('./models/hitModel');
 
@@ -18,7 +19,7 @@ const cors = require('cors');
 const AppError = require('./utils/AppError');
 const path = require('path');
 // GLOBAL
-
+const {PintDataClass} = require('./utils/PintDataClass');
 app.use(morgan('dev'));
 // protect
 app.use(helmet());
@@ -66,6 +67,9 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 
+// fetch initial data 
+const p = new PintDataClass()
+
 app.get('/api/addHit', async (req, res) => {
   if (process.env.NODE_ENV == 'production') {
     try {
@@ -81,7 +85,7 @@ app.get('/api/addHit', async (req, res) => {
     status: 200,
   });
 });
-
+app.use('/api/public', publicRoutes);
 app.use('/api/donor', donorRoute);
 app.use('/api/patient', patietRoute);
 app.use('/api/admin', adminRoute);

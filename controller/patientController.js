@@ -6,6 +6,7 @@ const email = require('./../utils/email');
 const sms = require('../utils/smsService');
 
 const e = require('express');
+const { PintDataClass } = require('../utils/PintDataClass');
 
 exports.getPatientStats = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
@@ -17,19 +18,11 @@ exports.getPatientStats = catchAsync(async (req, res, next) => {
 });
 
 exports.getMatches = catchAsync(async (req, res, next) => {
-  const patients = await Patient.find({});
-
-  let matches = 0;
-
-  for (let i = 0; i < patients.length; i++) {
-    if (patients[i]['matchedEarlier'] == true) {
-      matches = matches + 1;
-    }
-  }
+  const matches = await Patient.find({matchedEarlier:true});
 
   res.status(200).json({
     status: 'Success',
-    matches,
+    matches:matches.length,
   });
 });
 
@@ -39,8 +32,10 @@ exports.addPatient = catchAsync(async (req, res, next) => {
   patient.healthy =
     patient.labDiagnosed == 1 && patient.doctorPrescription == 1;
 
-  await Patient.create(patient);
-
+  let doc = await Patient.create(patient);
+  if (doc) {
+    PintDataClass.incr_Patient_count()
+  }
   if (patient.contact) {
     await sms.sendWelcomeMessage(patient);
   }

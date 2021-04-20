@@ -1,4 +1,5 @@
 const constants = require('../constants');
+const {PintDataClass} = require('../utils/PintDataClass')
 
 const Donor = require('../models/donorModel');
 const Hit = require('../models/hitModel');
@@ -23,7 +24,10 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     donor.age >= 18 &&
     donor.age <= 65;
 
-  await Donor.create(donor);
+  let doc = await Donor.create(donor);
+  if(doc){
+    PintDataClass.incr_Donor_count()
+  }
 
   if (donor.contact) {
     await sms.sendWelcomeMessage(donor);

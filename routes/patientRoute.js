@@ -7,11 +7,6 @@ router
 .route('/')
 .post(patientController.addPatient)
 
-
-router
-.route('/stat')
-.get(patientController.getPatientStats)
-
 router
 .route('/matches')
 .get(patientController.getMatches)
