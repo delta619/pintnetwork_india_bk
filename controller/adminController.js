@@ -24,6 +24,7 @@ exports.getDonors = catchAsync(async (req, res) => {
 
   let donors = [];
   let filter = {};
+
   let query;
 
   // city filter
@@ -36,7 +37,7 @@ exports.getDonors = catchAsync(async (req, res) => {
     filter['blood'] = pack['bloodGroupFilter'];
   }
   if(pack["hideWarriorDonors"]){
-    filter['heard_from']!='warriors'
+    filter['heard_from']={$ne:'warriors'}
   }
 
   // recent filter
