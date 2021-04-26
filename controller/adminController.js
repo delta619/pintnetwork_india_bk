@@ -35,8 +35,8 @@ exports.getDonors = catchAsync(async (req, res) => {
   if (pack['bloodGroupFilter']) {
     filter['blood'] = pack['bloodGroupFilter'];
   }
-  if(pack["filterWarriorDonors"]){
-    filter['heard_from']='warriors'
+  if(pack["hideWarriorDonors"]){
+    filter['heard_from']!='warriors'
   }
 
   // recent filter
