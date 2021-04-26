@@ -16,7 +16,6 @@ const xss = require('xss-clean');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
-const AppError = require('./utils/AppError');
 const path = require('path');
 // GLOBAL
 const {PintDataClass} = require('./utils/PintDataClass');
@@ -89,10 +88,7 @@ app.use('/api/public', publicRoutes);
 app.use('/api/donor', donorRoute);
 app.use('/api/patient', patietRoute);
 app.use('/api/admin', adminRoute);
-app.use(
-  '/api/blood',
-  require(path.join(__dirname, 'routes', 'blood', 'bloodRoute.js'))
-);
+
 
 app.all('*', (req, res, next) => {
   return res.status(204).end();

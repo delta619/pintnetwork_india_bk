@@ -4,7 +4,6 @@ const Donor = require('../models/donorModel');
 const Patient = require('../models/patientModel');
 const matchController = require('./matchController');
 const excel = require('exceljs');
-const fs = require('fs');
 const constants = require('../constants');
 
 exports.checkAdminLogin = catchAsync(async (req, res, next) => {
@@ -109,18 +108,12 @@ exports.triggerMatch = async (req, res) => {
 };
 
 exports.getCities = async (req, res) => {
-  const donors = await Donor.find({});
-  const patients = await Patient.find({});
+  const donor_cities = await Donor.distinct('city');
+  const patient_cities = await Patient.distinct('city');
 
-  let cities = [];
+  let cities = [... new Set(donor_cities.concat(patient_cities))];
 
-  donors.forEach((donor) => {
-    cities.push(donor['city']);
-  });
 
-  patients.forEach((patient) => {
-    cities.push(patient['city']);
-  });
   cities = cities.filter((item, i, ar) => ar.indexOf(item) === i);
   res.json({
     status: 'success',

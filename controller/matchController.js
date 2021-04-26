@@ -2,9 +2,6 @@ const sms = require('../utils/smsService');
 const emailController = require('./emailController');
 const Donor = require('../models/donorModel');
 const Patient = require('../models/patientModel');
-const pdf = require('../utils/pdfModule/pdfGenerator');
-const fs = require('fs');
-const constants = require('../constants');
 const { PintDataClass } = require('../utils/PintDataClass');
 
 exports.match = async (donor, patient) => {
