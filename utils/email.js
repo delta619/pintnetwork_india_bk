@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
-exports.sendEmailPlain = async (options) => {
+exports.sendEmailPlain =  (options) => {
 
   const mailOptions = {
     from: 'Pint Network <admin@pintnetwork.com>',

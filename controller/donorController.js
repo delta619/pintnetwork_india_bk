@@ -29,12 +29,12 @@ exports.addDonor = catchAsync(async (req, res, next) => {
     PintDataClass.incr_Donor_count()
   }
 
-  if (donor.contact) {
-    await sms.sendWelcomeMessage(donor);
-  }
+  // if (donor.contact) {
+  //   await sms.sendWelcomeMessage(donor);
+  // }
 
   if (donor.email) {
-    await email.sendEmailPlain({
+    email.sendEmailPlain({
       email: donor.email,
       subject: 'Welcome to PintNetwork',
       message: `
@@ -45,6 +45,10 @@ exports.addDonor = catchAsync(async (req, res, next) => {
         <br>We thank you for your time.<br>
         <br>Regards,
         <br>Team PINT`,
+    }).then(res=>{
+      console.log("Donor Mail ",donor.name," sent.");
+    }).catch(err=>{
+      console.log("Donor Mail ",donor.name," failed. ",err);
     });
   }
 

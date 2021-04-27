@@ -32,16 +32,18 @@ exports.addPatient = catchAsync(async (req, res, next) => {
   patient.healthy =
     patient.labDiagnosed == 1 && patient.doctorPrescription == 1;
 
-  let doc = await Patient.create(patient);
-  if (doc) {
-    PintDataClass.incr_Patient_count()
-  }
-  if (patient.contact) {
-    await sms.sendWelcomeMessage(patient);
-  }
+  Patient.create(patient).then(doc=>{
+    if (doc) {
+      PintDataClass.incr_Patient_count()
+    }
+  });
+  
+  // if (patient.contact) {
+  //   await sms.sendWelcomeMessage(patient);
+  // }
 
   if (patient.email) {
-    await email.sendEmailPlain({
+     email.sendEmailPlain({
       email: patient.email,
       subject: 'Welcome to PintNetwork',
       message: `
@@ -53,6 +55,10 @@ exports.addPatient = catchAsync(async (req, res, next) => {
         <br>Regards,
         <br>Team PINT
         `,
+    }).then(res=>{
+      console.log(res);
+    }).catch(err=>{
+      console.log(err);
     });
   }
 
