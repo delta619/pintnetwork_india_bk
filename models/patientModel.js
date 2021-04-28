@@ -36,7 +36,7 @@ const patientSchema = new mongoose.Schema({
   },
   registeredAt: {
     type: Date,
-    default: Date.UTC()
+    default: ()=>{return new Date(Date.now())}
   },
   healthy: {
     type: Boolean,

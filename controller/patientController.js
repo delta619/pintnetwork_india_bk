@@ -27,17 +27,18 @@ exports.getMatches = catchAsync(async (req, res, next) => {
 });
 
 exports.addPatient = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   let patient = { ...req.body };
 
   patient.healthy =
     patient.labDiagnosed == 1 && patient.doctorPrescription == 1;
 
-  Patient.create(patient).then(doc=>{
-    if (doc) {
-      PintDataClass.incr_Patient_count()
-    }
+  let doc = await Patient.create(patient).then(doc=>{
   });
   
+  if (doc) {
+    PintDataClass.incr_Patient_count()
+  }
   // if (patient.contact) {
   //   await sms.sendWelcomeMessage(patient);
   // }
@@ -56,7 +57,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
         <br>Team PINT
         `,
     }).then(res=>{
-      console.log(res);
+      console.log("Donor Mail sent ",patient.name);
     }).catch(err=>{
       console.log(err);
     });
