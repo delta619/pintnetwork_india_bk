@@ -1,11 +1,9 @@
 const Patient = require('../models/patientModel');
-const Donor = require('../models/donorModel');
 
 const catchAsync = require('../utils/catchAsync');
 const email = require('./../utils/email');
 const sms = require('../utils/smsService');
 
-const e = require('express');
 const { PintDataClass } = require('../utils/PintDataClass');
 
 exports.getPatientStats = catchAsync(async (req, res, next) => {
@@ -33,15 +31,17 @@ exports.addPatient = catchAsync(async (req, res, next) => {
   patient.healthy =
     patient.labDiagnosed == 1 && patient.doctorPrescription == 1;
 
-  let doc = await Patient.create(patient).then(doc=>{
-  });
+  let doc = await Patient.create(patient,{setDefaultsOnInsert :true})
+
+
   
   if (doc) {
+    console.log(doc.registeredAt);
     PintDataClass.incr_Patient_count()
   }
-  // if (patient.contact) {
-  //   await sms.sendWelcomeMessage(patient);
-  // }
+  if (patient.contact) {
+    await sms.sendWelcomeMessage(patient);
+  }
 
   if (patient.email) {
      email.sendEmailPlain({

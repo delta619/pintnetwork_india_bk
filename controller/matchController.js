@@ -53,6 +53,7 @@ exports.match = async (donor, patient) => {
           var1: donor.name,
           var2: '',
         });
+        console.log("sent sms to donor");
       }
   
       if (patient.contact) {
@@ -63,6 +64,7 @@ exports.match = async (donor, patient) => {
           var3: `${donor.name}, ${donor.contact}, ${donor.email}`,
           var4: '',
         });
+        console.log("sent sms to patient");
       }
     } catch (error) {
       

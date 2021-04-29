@@ -80,23 +80,23 @@ exports.sendMatchResponseDonor = async (data) => {
 };
 
 exports.sendMatchResponsePatient = async (data) => {
-  try {
-    axios({
-      method: 'post',
-      url: `http://2factor.in/API/V1/${process.env.SMS_API_KEY}/ADDON_SERVICES/SEND/TSMS`,
-      data: {
-        From: 'PINTNW',
-        To: process.env.DEFAULT_SMS_CONTACT || data.to,
-        TemplateName: 'v3_patient_matched',
-        VAR1: data.var1, //Name of the Patient
-        VAR2: data.var2, //his/her
-        VAR3: data.var3, // Details
-        VAR4: data.var4, // blank
-      },
-    });
-  } catch (error) {
-    await sendErrorMail(error);
+  axios({
+    method: 'post',
+    url: `http://2factor.in/API/V1/${process.env.SMS_API_KEY}/ADDON_SERVICES/SEND/TSMS`,
+    data: {
+      From: 'PINTNW',
+      To: process.env.DEFAULT_SMS_CONTACT || data.to,
+      TemplateName: 'v3_patient_matched',
+      VAR1: data.var1, //Name of the Patient
+      VAR2: data.var2, //his/her
+      VAR3: data.var3, // Details
+      VAR4: data.var4, // blank
+    }
+  }).then(res=>{
+    console.log(res.data);
+  }).catch(err=>{
+    console.log(err);
+  });
 
-    throw error;
-  }
+
 };

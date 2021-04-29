@@ -35,8 +35,8 @@ exports.getDonors = catchAsync(async (req, res) => {
   if (pack['bloodGroupFilter']) {
     filter['blood'] = pack['bloodGroupFilter'];
   }
-  if(pack["hideWarriorDonors"]){
-    filter['heard_from']={$ne:'warriors'}
+  if(pack["useWarrior"]){
+    filter['heard_from']='warriors'
   }
 
   // recent filter
@@ -108,7 +108,15 @@ exports.triggerMatch = async (req, res) => {
 };
 
 exports.getCities = async (req, res) => {
-  const donor_cities = await Donor.distinct('city');
+  
+  let filter = {}
+  if(req.body.filter.useWarrior != true){
+    filter["heard_from"] = {$ne:'warriors'}
+  }
+
+  
+  const donor_cities = await Donor.distinct('city',filter);
+
   const patient_cities = await Patient.distinct('city');
 
   let cities = [... new Set(donor_cities.concat(patient_cities))];
