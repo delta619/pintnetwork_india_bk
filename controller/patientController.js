@@ -31,7 +31,7 @@ exports.addPatient = catchAsync(async (req, res, next) => {
   patient.healthy =
     patient.labDiagnosed == 1 && patient.doctorPrescription == 1;
 
-  let doc = await Patient.create(patient,{setDefaultsOnInsert :true})
+  let doc = await Patient.create(patient)
 
 
   
