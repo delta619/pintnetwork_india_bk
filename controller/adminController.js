@@ -38,6 +38,9 @@ exports.getDonors = catchAsync(async (req, res) => {
   if(pack["useWarrior"] == false){
     filter['heard_from']= {$ne:'warriors'}
   }
+  if(pack['removeDonor28daysfilter'] != true){
+    filter['last_symptom_discharge_date'] = {$lt: new Date(Date.now() - 27 * 24 * 60 * 60 * 1000 )}
+  }
 
   // recent filter
   // if (pack['recentFilter']) {
