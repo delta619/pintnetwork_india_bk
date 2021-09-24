@@ -8,7 +8,7 @@ console.log(`#${process.env.NODE_ENV}# mode is on`);
 if (process.env.NODE_ENV == 'production') {
   [db, dbServerName] = [
     process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD),
-    'Production Server',
+    'Production Server' ,
   ];
 } else {
   [db, dbServerName] = [process.env.DATABASE_LOCAL, 'Local'];
